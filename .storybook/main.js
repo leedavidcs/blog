@@ -2,6 +2,8 @@ const { addWebpackAlias } = require("customize-cra");
 const path = require("path");
 const webpack = require("webpack");
 
+const toPath = (_path) => path.join(process.cwd(), _path)
+
 module.exports = {
 	stories: [
 		"../src/**/*.stories.@(tsx|mdx)",
@@ -14,6 +16,9 @@ module.exports = {
 		"@storybook/addon-knobs",
 		"@storybook/addon-storysource"
 	],
+	refs: {
+		"@chakra-ui/react": { disable: true }
+	},
 	typescript: {
 		check: false,
 		checkOptions: {},
@@ -57,6 +62,10 @@ module.exports = {
 			]
 		});
 
-		return addWebpackAlias({ "@": path.resolve(__dirname, "../src") })(config);
+		return addWebpackAlias({
+			"@": path.resolve(__dirname, "../src"),
+			"@emotion/core": toPath("node_modules/@emotion/react"),
+			"emotion-theming": toPath("node_modules/@emotion/react")
+		})(config);
 	}
 };
