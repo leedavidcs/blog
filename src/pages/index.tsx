@@ -1,4 +1,4 @@
-import { CTA, DarkModeSwitch, Footer, Hero, Main, Surface } from "@/client/components";
+import { ColorModeSwitch, CTA, Footer, Hero, Main, Surface } from "@/client/components";
 import { CheckCircleIcon, LinkIcon } from "@chakra-ui/icons";
 import { Code, Link as ChakraLink, List, ListIcon, ListItem, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
@@ -11,7 +11,6 @@ export const Page: NextPage = () => (
 				Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{" "}
 				<Code>typescript</Code>.
 			</Text>
-
 			<List spacing={3} my={0}>
 				<ListItem>
 					<ListIcon as={CheckCircleIcon} color="purple.500" />
@@ -27,7 +26,7 @@ export const Page: NextPage = () => (
 				</ListItem>
 			</List>
 		</Main>
-		<DarkModeSwitch />
+		<ColorModeSwitch />
 		<Footer>
 			<Text>Next ❤️ Chakra</Text>
 		</Footer>
