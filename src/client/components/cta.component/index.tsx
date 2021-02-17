@@ -1,5 +1,5 @@
+import { Surface } from "@/client/components/surface.component";
 import { Button, Link as ChakraLink } from "@chakra-ui/react";
-import { Surface } from "./surface.component";
 
 export const CTA = () => (
 	<Surface flexDirection="row" position="fixed" bottom="0" width="100%" maxWidth="48rem" py={2}>
