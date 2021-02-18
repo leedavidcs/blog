@@ -7,6 +7,7 @@ export const ColorModeSwitch: FC<SwitchProps> = (props) => {
 
 	return (
 		<Switch
+			aria-label="color mode switch"
 			position="fixed"
 			top="1rem"
 			right="1rem"
