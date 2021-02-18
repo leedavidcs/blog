@@ -1,37 +1,52 @@
-import { ColorModeSwitch, CTA, Footer, Hero, Main, Surface } from "@/client/components";
-import { CheckCircleIcon, LinkIcon } from "@chakra-ui/icons";
-import { Code, Link as ChakraLink, List, ListIcon, ListItem, Text } from "@chakra-ui/react";
+import { ColorModeSwitch, LandingIntro, PostLink, Socials, Surface } from "@/client/components";
+import { Box, Heading, List, ListItem } from "@chakra-ui/react";
+import { css } from "@emotion/react";
 import { NextPage } from "next";
 
-export const Page: NextPage = () => (
-	<Surface height="100vh">
-		<Hero />
-		<Main>
-			<Text>
-				Example repository of <Code>Next.js</Code> + <Code>chakra-ui</Code> +{" "}
-				<Code>typescript</Code>.
-			</Text>
-			<List spacing={3} my={0}>
-				<ListItem>
-					<ListIcon as={CheckCircleIcon} color="purple.500" />
-					<ChakraLink isExternal href="https://chakra-ui.com" flexGrow={1} mr={2}>
-						Chakra UI <LinkIcon />
-					</ChakraLink>
-				</ListItem>
-				<ListItem>
-					<ListIcon as={CheckCircleIcon} color="purple.500" />
-					<ChakraLink isExternal href="https://nextjs.org" flexGrow={1} mr={2}>
-						Next.js <LinkIcon />
-					</ChakraLink>
-				</ListItem>
-			</List>
-		</Main>
-		<ColorModeSwitch />
-		<Footer>
-			<Text>Next ❤️ Chakra</Text>
-		</Footer>
-		<CTA />
-	</Surface>
-);
+const classes = {
+	container: css`
+		box-sizing: border-box;
+		margin: 32px auto;
+		padding: 24px 12px;
+		max-width: 640px;
+		width: 100%;
+	`
+};
+
+export const Page: NextPage = () => {
+	return (
+		<Surface height="100vh">
+			<Box css={classes.container}>
+				<Heading as="h1" fontSize="4xl" mb={4}>
+					lee.david.cs
+				</Heading>
+				<Socials mb={4} />
+				<LandingIntro />
+				<Box>
+					<Heading as="h2" fontSize="2xl" mt={12} mb={4}>
+						Posts
+					</Heading>
+					<List spacing={4} my={0}>
+						<ListItem>
+							<PostLink
+								header="My First Post"
+								description="A meaningful description"
+								date="01/01/2021"
+							/>
+						</ListItem>
+						<ListItem>
+							<PostLink
+								header="My Second Post"
+								description="A meaningful description"
+								date="01/01/2021"
+							/>
+						</ListItem>
+					</List>
+				</Box>
+				<ColorModeSwitch />
+			</Box>
+		</Surface>
+	);
+};
 
 export default Page;
