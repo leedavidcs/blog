@@ -1,5 +1,6 @@
+import { Link } from "@/client/components/link.component";
 import { EmailIcon } from "@chakra-ui/icons";
-import { Box, BoxProps, Link as ChakraLink, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Text } from "@chakra-ui/react";
 import { FC } from "react";
 
 export const LandingHireMe: FC<BoxProps> = (props) => {
@@ -8,16 +9,10 @@ export const LandingHireMe: FC<BoxProps> = (props) => {
 			<Text>Interested in hiring me?</Text>
 			<Text>
 				Get in touch:{" "}
-				<ChakraLink
-					color="blue.500"
-					display="inline-flex"
-					alignItems="center"
-					isExternal={true}
-					href="mailto:jobs.lee.david.cs@gmail.com"
-				>
+				<Link isExternal={true} href="mailto:jobs.lee.david.cs@gmail.com">
 					jobs.lee.david.cs@gmail.com&nbsp;
 					<EmailIcon />
-				</ChakraLink>
+				</Link>
 			</Text>
 		</Box>
 	);

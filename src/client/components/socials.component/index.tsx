@@ -1,28 +1,25 @@
 import { ReactComponent as GithubIcon } from "@/assets/svg/github.favicon.svg";
-import { Flex, FlexProps, Icon, Image, Link as ChakraLink, useColorMode } from "@chakra-ui/react";
+import { Link } from "@/client/components/link.component";
+import { Box, BoxProps, Icon, Image, useColorMode } from "@chakra-ui/react";
 import { css } from "@emotion/react";
 import { FC } from "react";
 
 const classes = {
 	link: css`
-		display: flex;
-		align-items: center;
-
 		&:not(:last-child) {
 			margin-right: 12px;
 		}
 	`
 };
 
-export const Socials: FC<FlexProps> = ({ ...props }) => {
+export const Socials: FC<BoxProps> = ({ ...props }) => {
 	const { colorMode } = useColorMode();
 
 	return (
-		<Flex {...props}>
-			<ChakraLink
+		<Box {...props}>
+			<Link
 				css={classes.link}
 				display="inline-flex"
-				color="blue.500"
 				isExternal={true}
 				href="https://twitter.com/i3Daly"
 			>
@@ -34,13 +31,8 @@ export const Socials: FC<FlexProps> = ({ ...props }) => {
 					width={4}
 					ml={1}
 				/>
-			</ChakraLink>
-			<ChakraLink
-				css={classes.link}
-				color="blue.500"
-				isExternal={true}
-				href="https://github.com/leedavidcs"
-			>
+			</Link>
+			<Link css={classes.link} isExternal={true} href="https://github.com/leedavidcs">
 				GitHub{" "}
 				<Icon
 					role="img"
@@ -51,10 +43,9 @@ export const Socials: FC<FlexProps> = ({ ...props }) => {
 					width={4}
 					ml={1}
 				/>
-			</ChakraLink>
-			<ChakraLink
+			</Link>
+			<Link
 				css={classes.link}
-				color="blue.500"
 				isExternal={true}
 				href="https://www.linkedin.com/in/leedavidcs/"
 			>
@@ -66,7 +57,7 @@ export const Socials: FC<FlexProps> = ({ ...props }) => {
 					width={4}
 					ml={1}
 				/>
-			</ChakraLink>
-		</Flex>
+			</Link>
+		</Box>
 	);
 };

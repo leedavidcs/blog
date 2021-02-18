@@ -1,10 +1,18 @@
-import { ColorModeSwitch, LandingIntro, PostLink, Socials, Surface } from "@/client/components";
-import { Box, Heading, List, ListItem } from "@chakra-ui/react";
+import {
+	ColorModeSwitch,
+	LandingIntro,
+	Link,
+	PostLink,
+	Socials,
+	Surface
+} from "@/client/components";
+import { Box, Heading, List, ListItem, useColorMode } from "@chakra-ui/react";
 import { css } from "@emotion/react";
 import { NextPage } from "next";
+import NextLink from "next/link";
 
 const classes = {
-	container: css`
+	content: css`
 		box-sizing: border-box;
 		margin: 32px auto;
 		padding: 24px 12px;
@@ -14,12 +22,18 @@ const classes = {
 };
 
 export const Page: NextPage = () => {
+	const { colorMode } = useColorMode();
+
 	return (
 		<Surface height="100vh">
-			<Box css={classes.container}>
-				<Heading as="h1" fontSize="4xl" mb={4}>
-					lee.david.cs
-				</Heading>
+			<Box css={classes.content}>
+				<NextLink href="/" passHref={true}>
+					<Link color={colorMode === "light" ? "purple.500" : "purple.300"}>
+						<Heading as="h1" fontSize="4xl" mb={4}>
+							lee.david.cs
+						</Heading>
+					</Link>
+				</NextLink>
 				<Socials mb={4} />
 				<LandingIntro />
 				<Box>
@@ -43,8 +57,8 @@ export const Page: NextPage = () => {
 						</ListItem>
 					</List>
 				</Box>
-				<ColorModeSwitch />
 			</Box>
+			<ColorModeSwitch />
 		</Surface>
 	);
 };

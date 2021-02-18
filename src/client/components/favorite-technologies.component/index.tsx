@@ -1,25 +1,13 @@
 import { ReactComponent as ReactIcon } from "@/assets/svg/react.favicon.svg";
-import { Icon, Image, Link as ChakraLink, Text, TextProps } from "@chakra-ui/react";
-import { css } from "@emotion/react";
+import { Link } from "@/client/components/link.component";
+import { Icon, Image, Text, TextProps } from "@chakra-ui/react";
 import { FC } from "react";
-
-const classes = {
-	link: css`
-		display: inline-flex;
-		align-items: center;
-	`
-};
 
 export const FavoriteTechnologies: FC<TextProps> = (props) => {
 	return (
 		<Text {...props}>
 			My favorite technologies are{" "}
-			<ChakraLink
-				css={classes.link}
-				color="blue.500"
-				isExternal={true}
-				href="https://reactjs.org/"
-			>
+			<Link isExternal={true} href="https://reactjs.org/">
 				React{" "}
 				<Icon
 					role="img"
@@ -29,14 +17,9 @@ export const FavoriteTechnologies: FC<TextProps> = (props) => {
 					width={4}
 					ml={1}
 				/>
-			</ChakraLink>
+			</Link>
 			,{" "}
-			<ChakraLink
-				css={classes.link}
-				color="blue.500"
-				isExternal={true}
-				href="https://www.typescriptlang.org/"
-			>
+			<Link isExternal={true} href="https://www.typescriptlang.org/">
 				TypeScript{" "}
 				<Image
 					alt="typescript icon"
@@ -45,14 +28,9 @@ export const FavoriteTechnologies: FC<TextProps> = (props) => {
 					width={4}
 					ml={1}
 				/>
-			</ChakraLink>{" "}
+			</Link>{" "}
 			and{" "}
-			<ChakraLink
-				css={classes.link}
-				color="blue.500"
-				isExternal={true}
-				href="https://graphql.org/"
-			>
+			<Link isExternal={true} href="https://graphql.org/">
 				GraphQL{" "}
 				<Image
 					alt="graphql icon"
@@ -61,7 +39,7 @@ export const FavoriteTechnologies: FC<TextProps> = (props) => {
 					width={4}
 					ml={1}
 				/>
-			</ChakraLink>
+			</Link>
 			.
 		</Text>
 	);
