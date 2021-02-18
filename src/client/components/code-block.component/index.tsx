@@ -23,6 +23,7 @@ export const CodeBlock: FC<ICodeBlockProps> = ({
 					p="0.5rem"
 					border={1}
 					rounded="md"
+					fontSize={"0.875rem"}
 					{...restBoxProps}
 					className={className}
 					style={style}
