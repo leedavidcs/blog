@@ -2,6 +2,7 @@ import { useColorMode } from "@chakra-ui/color-mode";
 import { LinkIcon } from "@chakra-ui/icons";
 import { Box, BoxProps, Heading, LinkBox, LinkOverlay, Text } from "@chakra-ui/layout";
 import dayjs from "dayjs";
+import { motion } from "framer-motion";
 import { FC, useMemo } from "react";
 
 export interface IPostLinkProps extends BoxProps {
@@ -22,7 +23,24 @@ export const PostLink: FC<IPostLinkProps> = ({
 	const href: string = useMemo(() => header.toLowerCase().split(/\s+/).join("-"), [header]);
 
 	return (
-		<LinkBox as="article" css={css} p={4} borderWidth={1} rounded="md" {...restBoxProps}>
+		<LinkBox
+			as={motion.article}
+			css={css}
+			p={4}
+			borderWidth={1}
+			boxShadow="md"
+			rounded="md"
+			variants={{
+				default: {
+					scale: 1
+				},
+				hover: {
+					scale: 0.975
+				}
+			}}
+			whileHover="hover"
+			{...(restBoxProps as any)}
+		>
 			<LinkOverlay href={href}>
 				<Heading
 					as="h3"
