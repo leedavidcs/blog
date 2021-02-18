@@ -29,7 +29,7 @@ addParameters({
 export const decorators = [
 	(Story) => (
 		<ChakraProvider>
-			<ColorModeScript />
+			<ColorModeScript initialColorMode="system" />
 			<Story />
 		</ChakraProvider>
 	),
