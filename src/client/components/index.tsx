@@ -6,6 +6,7 @@ export * from "./landing-avatar.component";
 export * from "./landing-hire-me.component";
 export * from "./landing-intro.component";
 export * from "./layout.component";
+export * from "./mdx-provider.component";
 export * from "./post-link.component";
 export * from "./socials.component";
 export * from "./surface.component";
