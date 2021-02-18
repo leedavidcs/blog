@@ -1,4 +1,5 @@
 export * from "./chakra-provider.component";
+export * from "./code-block.component";
 export * from "./color-mode-switch.component";
 export * from "./favorite-technologies.component";
 export * from "./landing-avatar.component";
