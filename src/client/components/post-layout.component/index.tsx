@@ -5,7 +5,7 @@ import { Surface } from "@/client/components/surface.component";
 import { Box, BoxProps, useColorMode } from "@chakra-ui/react";
 import { css } from "@emotion/react";
 import NextLink from "next/link";
-import { FC } from "react";
+import React, { FC } from "react";
 
 const classes = {
 	content: css`
@@ -19,6 +19,7 @@ const classes = {
 
 export const PostLayout: FC<BoxProps> = ({ children, ...restBoxProps }) => {
 	const { colorMode } = useColorMode();
+
 	return (
 		<MDXProvider>
 			<Surface height="100vh" {...restBoxProps}>
@@ -26,13 +27,13 @@ export const PostLayout: FC<BoxProps> = ({ children, ...restBoxProps }) => {
 					<NextLink href="/" passHref={true}>
 						<Link
 							color={colorMode === "light" ? "purple.500" : "purple.300"}
-							fontSize="4xl"
+							fontSize="xl"
 							fontWeight={700}
 						>
 							lee.david.cs
 						</Link>
 					</NextLink>
-					<Box mt={12}>{children}</Box>
+					<Box mt={8}>{children}</Box>
 				</Box>
 				<ColorModeSwitch />
 			</Surface>

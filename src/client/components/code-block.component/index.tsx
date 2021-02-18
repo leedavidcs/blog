@@ -1,7 +1,7 @@
 import { Box, BoxProps } from "@chakra-ui/layout";
 import Highlight, { defaultProps, Language } from "prism-react-renderer";
 import theme from "prism-react-renderer/themes/dracula";
-import { FC, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 
 export interface ICodeBlockProps extends BoxProps {
 	children?: string;

@@ -1,5 +1,5 @@
 import { ColorModeSwitch, Link } from "@/client/components";
-import { FC } from "react";
+import React, { FC } from "react";
 
 export default {
 	title: "components/link/dynamic",

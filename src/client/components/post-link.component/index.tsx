@@ -3,7 +3,7 @@ import { LinkIcon } from "@chakra-ui/icons";
 import { Box, BoxProps, Heading, LinkBox, LinkOverlay, Text } from "@chakra-ui/layout";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
-import { FC, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 
 export interface IPostLinkProps extends BoxProps {
 	date: string;
@@ -20,7 +20,9 @@ export const PostLink: FC<IPostLinkProps> = ({
 }) => {
 	const { colorMode } = useColorMode();
 
-	const href: string = useMemo(() => header.toLowerCase().split(/\s+/).join("-"), [header]);
+	const href: string = useMemo(() => `/posts/${header.toLowerCase().split(/\s+/).join("-")}`, [
+		header
+	]);
 
 	return (
 		<LinkBox

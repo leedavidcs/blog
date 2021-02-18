@@ -1,5 +1,5 @@
 import { LandingIntro } from "@/client/components";
-import { FC } from "react";
+import React, { FC } from "react";
 
 export default {
 	title: "components/landing-intro/dynamic",

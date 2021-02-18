@@ -2,14 +2,15 @@ import {
 	ColorModeSwitch,
 	LandingIntro,
 	Link,
+	PageType,
 	PostLink,
 	Socials,
 	Surface
 } from "@/client/components";
 import { Box, Heading, List, ListItem, useColorMode } from "@chakra-ui/react";
 import { css } from "@emotion/react";
-import { NextPage } from "next";
 import NextLink from "next/link";
+import React, { Fragment } from "react";
 
 const classes = {
 	content: css`
@@ -21,7 +22,7 @@ const classes = {
 	`
 };
 
-export const Page: NextPage = () => {
+export const Page: PageType = () => {
 	const { colorMode } = useColorMode();
 
 	return (
@@ -62,5 +63,7 @@ export const Page: NextPage = () => {
 		</Surface>
 	);
 };
+
+Page.Layout = Fragment;
 
 export default Page;

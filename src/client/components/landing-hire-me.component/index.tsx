@@ -1,7 +1,7 @@
 import { Link } from "@/client/components/link.component";
 import { EmailIcon } from "@chakra-ui/icons";
 import { Box, BoxProps, Text } from "@chakra-ui/react";
-import { FC } from "react";
+import React, { FC } from "react";
 
 export const LandingHireMe: FC<BoxProps> = (props) => {
 	return (

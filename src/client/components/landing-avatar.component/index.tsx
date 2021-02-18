@@ -1,5 +1,5 @@
 import { Avatar, AvatarProps } from "@chakra-ui/avatar";
-import { FC } from "react";
+import React, { FC } from "react";
 
 export const LandingAvatar: FC<AvatarProps> = (props) => {
 	return (

@@ -1,5 +1,5 @@
 import { ColorModeSwitch } from "@/client/components";
-import { FC } from "react";
+import React, { FC } from "react";
 
 export default {
 	title: "components/color-mode-switch/dynamic",

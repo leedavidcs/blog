@@ -2,7 +2,7 @@ import { ReactComponent as GithubIcon } from "@/assets/svg/github.favicon.svg";
 import { Link } from "@/client/components/link.component";
 import { Box, BoxProps, Icon, Image, useColorMode } from "@chakra-ui/react";
 import { css } from "@emotion/react";
-import { FC } from "react";
+import React, { FC } from "react";
 
 const classes = {
 	link: css`

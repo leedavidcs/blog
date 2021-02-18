@@ -3,7 +3,7 @@ import { LinkIcon } from "@chakra-ui/icons";
 import { Code, Heading, Image, Link as ChakraLink, List, ListItem, Text } from "@chakra-ui/react";
 import { MDXProvider as _MDXProvider } from "@mdx-js/react";
 import NextLink from "next/link";
-import { AnchorHTMLAttributes, DetailedHTMLProps, FC, ReactNode, useCallback } from "react";
+import React, { AnchorHTMLAttributes, DetailedHTMLProps, FC, ReactNode, useCallback } from "react";
 
 export interface IMDXProviderProps {
 	children?: ReactNode;
@@ -26,7 +26,7 @@ export const MDXProvider: FC<IMDXProviderProps> = ({ children }) => {
 					<ChakraLink id={toScrollId(headerText as string)}>
 						<Heading as={type} {...props}>
 							{headerText}
-							<LinkIcon />
+							<LinkIcon height="0.5em" width="0.5em" ml="0.3em" />
 						</Heading>
 					</ChakraLink>
 				</NextLink>

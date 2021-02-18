@@ -1,6 +1,6 @@
 import { ChakraProvider as _ChakraProvider } from "@chakra-ui/react";
 import { css, Global } from "@emotion/react";
-import { FC, ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 
 export interface IChakraProviderProps {
 	children?: ReactNode;

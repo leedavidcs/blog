@@ -1,6 +1,6 @@
 import { PostLink } from "@/client/components";
 import { ColorModeSwitch } from "@/client/components/color-mode-switch.component";
-import { FC } from "react";
+import React, { FC } from "react";
 
 export default {
 	title: "components/post-link/dynamic",

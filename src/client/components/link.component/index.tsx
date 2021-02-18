@@ -1,6 +1,6 @@
 import { Link as ChakraLink, LinkProps, useColorMode } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 
 const StyledLink = styled(ChakraLink)`
 	display: inline-flex;

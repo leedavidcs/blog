@@ -1,6 +1,6 @@
 import { Flex, FlexProps } from "@chakra-ui/layout";
 import { useColorMode } from "@chakra-ui/system";
-import { FC } from "react";
+import React, { FC } from "react";
 
 export const Surface: FC<FlexProps> = (props) => {
 	const { colorMode } = useColorMode();

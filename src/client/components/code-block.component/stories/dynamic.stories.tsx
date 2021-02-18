@@ -1,6 +1,6 @@
 import { CodeBlock } from "@/client/components";
 import { codeBlock } from "common-tags";
-import { FC } from "react";
+import React, { FC } from "react";
 
 export default {
 	title: "components/code-block/dynamic",

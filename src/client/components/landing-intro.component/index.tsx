@@ -3,7 +3,7 @@ import { LandingAvatar } from "@/client/components/landing-avatar.component";
 import { LandingHireMe } from "@/client/components/landing-hire-me.component";
 import { Link } from "@/client/components/link.component";
 import { Box, BoxProps, Flex, Image, Text, useColorMode } from "@chakra-ui/react";
-import { FC } from "react";
+import React, { FC } from "react";
 
 export const LandingIntro: FC<BoxProps> = (props) => {
 	const { colorMode } = useColorMode();
