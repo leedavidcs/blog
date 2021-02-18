@@ -19,6 +19,7 @@
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "@types/react-is": "^17.0.0",
+    "dayjs": "^1.10.4",
     "framer-motion": "^3.3.0",
     "graphql": "^15.0.0",
     "isomorphic-unfetch": "^3.0.0",
@@ -31,6 +32,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
+    "@emotion/babel-plugin": "^11.2.0",
+    "@emotion/babel-preset-css-prop": "^11.2.0",
     "@next/bundle-analyzer": "^10.0.7",
     "@next/mdx": "^10.0.7",
     "@storybook/addon-a11y": "^6.1.18",
