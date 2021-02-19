@@ -1,5 +1,6 @@
 import { PostLink } from "@/client/components";
 import { ColorModeSwitch } from "@/client/components/color-mode-switch.component";
+import { List } from "@chakra-ui/layout";
 import React, { FC } from "react";
 
 export default {
@@ -9,7 +10,7 @@ export default {
 
 export const Standard: FC = () => {
 	return (
-		<>
+		<List>
 			<PostLink
 				header="Sample Post Title"
 				description="Here is a meaningful description"
@@ -17,6 +18,6 @@ export const Standard: FC = () => {
 				mt={12}
 			/>
 			<ColorModeSwitch />
-		</>
+		</List>
 	);
 };

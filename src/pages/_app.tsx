@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { NextComponentType, NextPageContext } from "next";
 import { AppContext, AppInitialProps, AppProps } from "next/app";
 import NextHead from "next/head";
+import { useRouter } from "next/router";
 import React, { ComponentType } from "react";
 
 interface ICustomAppProps extends Omit<AppProps, "Component"> {
@@ -16,6 +17,8 @@ const App: NextComponentType<AppContext, AppInitialProps, ICustomAppProps & { co
 	cookies,
 	pageProps
 }) => {
+	const router = useRouter();
+
 	const Layout: ComponentType = Component.Layout ?? PostLayout;
 
 	return (
@@ -38,22 +41,14 @@ const App: NextComponentType<AppContext, AppInitialProps, ICustomAppProps & { co
 						: localStorageManager
 				}
 			>
-				<Layout>
-					<AnimatePresence exitBeforeEnter={true}>
+				<AnimatePresence exitBeforeEnter={true}>
+					<Layout key={router.route}>
 						<Component {...pageProps} />
-					</AnimatePresence>
-				</Layout>
+					</Layout>
+				</AnimatePresence>
 			</ChakraProvider>
 		</>
 	);
-};
-
-export const getServerSideProps = ({ req }) => {
-	return {
-		props: {
-			cookies: req.headers.cookie ?? ""
-		}
-	};
 };
 
 export default App;

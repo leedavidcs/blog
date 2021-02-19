@@ -14,6 +14,7 @@ export * from "./list-item.component";
 export * from "./mdx-provider.component";
 export * from "./post-layout.component";
 export * from "./post-link.component";
+export * from "./post-list.component";
 export * from "./socials.component";
 export * from "./surface.component";
 
