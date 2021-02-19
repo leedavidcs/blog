@@ -46,17 +46,17 @@ export const Page: PageType = () => {
 						<PostLink
 							header="Writing Emails in React"
 							description="No more string emails; made possible with MJML"
-							date="02/18/2020"
+							date="02/18/2021"
 						/>
 						<PostLink
 							header="Best GraphQL stack for a TypeScript Dev"
 							description="Urql + Nexus + Prisma + Codegen for great TypeScript DX"
-							date="02/19/2020"
+							date="02/19/2021"
 						/>
 						<PostLink
 							header="Exploring CSS in JS"
 							description="Linarias for your love and website"
-							date="02/20/2020"
+							date="02/20/2021"
 						/>
 					</PostList>
 				</Box>
