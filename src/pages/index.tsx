@@ -44,16 +44,9 @@ export const Page: PageType = () => {
 					<List spacing={4} my={0}>
 						<ListItem>
 							<PostLink
-								header="My First Post"
-								description="A meaningful description"
-								date="01/01/2021"
-							/>
-						</ListItem>
-						<ListItem>
-							<PostLink
-								header="My Second Post"
-								description="A meaningful description"
-								date="01/01/2021"
+								header="Writing Emails in React"
+								description="No more string emails; made possible with MJML"
+								date="02/18/2020"
 							/>
 						</ListItem>
 					</List>

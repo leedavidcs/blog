@@ -5,4 +5,396 @@ export const meta = {
 
 # Writing Emails in React
 
-export default ({ children }) => children;
+February 18, 2021
+
+If you've ever worked on HTML emails in [Node.js](https://nodejs.org/en/), there's a good chance you've worked with the [nodemailer](https://nodemailer.com/about/) module, and also maintained HTML templates written as template literals in JavaScript.
+
+```typescript
+const info = await transporter.sendMail({
+	from: '"Fred Foo 👻" <foo@example.com>', // sender address
+	to: "bar@example.com, baz@example.com", // list of receivers
+	subject: "Hello ✔", // Subject line
+	text: "Hello world?", // plain text body
+	html: "<b>Hello world?</b>", // html body
+});
+```
+*Example taken from [nodemailer.com](nodemailer.com)*
+
+If you're a React + TypeScript developer like me, losing all of your static typing and intellisense feels like a hit to your developer experience (DX).
+
+Not only that, but also [a lot of CSS has lackluster support on email clients](https://www.campaignmonitor.com/css/), which can lead you to writing complex HTML `table` structures to ensure consistent layouts.
+
+```html
+<table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td colspan="3" height="120px">....</td>
+    </tr>
+    <tr>
+        <td class="menu" valign="top">...</td>
+        <td class="content" valign="top">...</td>
+        <td class="aSide" valign="top">...</td>
+    </tr>
+    <tr>
+        <td colspan="3">...</td>
+    </tr>
+</table>
+```
+*Example taken from [smashingmagazine.com/2009/04/from-table-hell-to-div-hell](https://www.smashingmagazine.com/2009/04/from-table-hell-to-div-hell/)*
+
+If maintaining emails in this way is so unpleasant, how can we improve our DX?
+
+## Introducing MJML-React
+
+We've identified 2 pain-points of emails in Node.js thus far.
+1. Template literals lose types and intellisense
+2. Poor CSS support on email clients leads to messy table layouts
+
+If you read the title to this post, you already know where this is headed.
+
+[Mailjet](https://www.mailjet.com/) has created an open-source email framework called [MJML](https://mjml.io/) (Mailjet Markup Language) which provides an elegant abstraction over the `table` layouts above, as well as many ready-made components to use.
+
+```html
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-image width="100px" src="https://mjml.io/assets/img/logo-small.png"></mj-image>
+        <mj-divider border-color="#F45E43"></mj-divider>
+        <mj-text font-size="20px" color="#F45E43" font-family="helvetica">Hello World</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
+```
+*Example taken from [mjml.com](https://documentation.mjml.io/)*
+
+*"Say goodbye to endless HTML table nesting or email client specific CSS. Building a responsive email is super easy with tags such as `<mj-section>` and `<mj-column>`"* (MJML documentation)
+
+So we've solved pain-point (#2), but with this, our server's email code will look like this:
+
+```typescript
+const html: string = `
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-image width="100px" src="https://mjml.io/assets/img/logo-small.png"></mj-image>
+        <mj-divider border-color="#F45E43"></mj-divider>
+        <mj-text font-size="20px" color="#F45E43" font-family="helvetica">Hello World</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
+`;
+
+const info = await transporter.sendMail({
+	from: '"Fred Foo 👻" <foo@example.com>', // sender address
+	to: "bar@example.com, baz@example.com", // list of receivers
+	subject: "Hello ✔", // Subject line
+	html
+});
+```
+
+As you can see, we're still without our types or intellisense becauses everything is a string. Thankfully, with [React](https://reactjs.org/)'s `createElement` you can render any arbitrary XML tag, which makes integrating with MJML a breeze.
+
+```tsx
+import React, { createElement, FC } from "react";
+
+export const MjmlButton: FC = ({ children, ...props }) => {
+	return createElement("mj-button", props, children);
+};
+
+/* ... */
+
+import mjml2html from "mjml";
+import type { ReactElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+
+const render = (email: ReactElement): string => {
+	return mjml2html(renderToStaticMarkup(email));
+};
+
+/* ... */
+
+const email = (
+	<Mjml>
+		{/* ... */}
+			<MjmlButton />
+		{/* ... */}
+	</Mjml>
+);
+
+const html: string = render(email);
+```
+
+You might say, "great, but wrapping every mjml component then typing all of the props seems like a pain".
+
+## Open-source got you covered
+
+Good thing we have [mjml-react](https://github.com/wix-incubator/mjml-react) and [@types/mjml-react](https://www.npmjs.com/package/@types/mjml-react) which does it all for us.
+
+Now, all we need to do is install dependencies, define our API, and build out our emails:
+
+```bash
+npm install mjml mjml-react @types/mjml-react
+```
+
+```typescript
+import { render } from "mjml-react";
+import { createElement, ComponentType } from "react";
+import { createTransport, SendMailOptions } from "nodemailer";
+
+export const createEmailHtml = <P extends {}>(
+	template: ComponentType<P>,
+	props: P
+): string => {
+	const mjmlElement = createElement(template, props);
+
+	const { html, errors } = render(mjmlElement);
+
+	if (errors?.length) {
+		throw new Error(errors[0]);
+	}
+
+	return html;
+};
+
+export const sendEmail = async (options: SendMailOptions) => {
+	const transporter = createTransport({
+		service: "gmail",
+		auth: {
+			user: process.env.EMAIL_SENDER_USER!,
+			pass: process.env.EMAIL_SENDER_PASSWORD!
+		}
+	});
+
+	return await transporter.sendMail({
+		sender: process.env.EMAIL_SENDER_USER!,
+		...options
+	});
+};
+```
+
+```tsx
+// email-base component
+
+import React, { FC } from "react";
+import {
+	Mjml,
+	MjmlAll,
+	MjmlAttributes,
+	MjmlBody,
+	MjmlBodyProps,
+	MjmlBreakpoint,
+	MjmlFont,
+	MjmlHead,
+	MjmlPreview,
+	MjmlTitle,
+	RequiredChildrenProps
+} from "mjml-react";
+
+export interface EmailBaseProps extends MjmlBodyProps, RequiredChildrenProps {
+	breakpoint?: number;
+	title: string;
+	preview: string;
+}
+
+export const EmailBase: FC<EmailBaseProps> = ({
+	breakpoint,
+	children,
+	title,
+	preview,
+	width,
+	...restBodyProps
+}) => {
+	const fontFamily = "Roboto";
+	const fontHref = `http://fonts.googleapis.com/css?family=${fontFamily}:400,100,100`;
+
+	return (
+		<Mjml>
+			<MjmlHead>
+				<MjmlTitle>{title}</MjmlTitle>
+				<MjmlPreview>{preview}</MjmlPreview>
+				<MjmlFont name={fontFamily} href={fontHref} />
+				<MjmlAttributes>
+					<MjmlAll fontFamily={fontFamily} fontSize={14} color="black" />
+				</MjmlAttributes>
+				{breakpoint && <MjmlBreakpoint width={breakpoint} />}
+			</MjmlHead>
+			<MjmlBody {...restBodyProps}>
+				{children}
+			</MjmlBody>
+		</Mjml>
+	);
+};
+```
+
+```tsx
+// email template to send to users
+
+import { EmailBase } from "./email-base.component.tsx";
+import { MjmlColumn, MjmlSection, MjmlText } from "mjml-react";
+import React, { FC } from "react";
+
+export interface HelloEmailProps {
+	firstName: string;
+	lastName: string;
+}
+
+export const HelloEmail: FC<HelloEmailProps> = ({
+	firstName,
+	lastName
+}) => {
+	const fullName: string = [firstName, lastName].join(" ");
+
+	return (
+		<EmailBase title="Hello!" preview="Hello from David Lee!">
+			<MjmlSection>
+				<MjmlColumn>
+					<MjmlText>Hello {fullName}</MjmlText>
+				</MjmlColumn>
+			</MjmlSection>
+		</EmailBase>
+	);
+};
+```
+
+Finally, you can send this email populating any data needed.
+
+```typescript
+import { createEmailHtml, HelloEmail, sendEmail } from "@myapp/server/email"; // Defined by us above
+
+/* ... */
+
+// Get user from your ORM
+const user = await prisma.user.findUnique({ where: { id } });
+
+if (!user) {
+	return null;
+}
+
+const { email, firstName, lastName } = user;
+
+const didSend: boolean =
+	await sendEmail({
+		to: email,
+		subject: "Hello from David Lee",
+		// With the magic of type generics, the props in parameter 2 have autocompletion
+		html: createEmailHtml(HelloEmail, {
+			firstName,
+			lastName
+		})
+	})
+	.then(() => true)
+	.catch(() => false);
+
+/* ... */
+```
+
+With this, we've now also solved pain-point (#1), since we now have types and intellisense provided by TypeScript on our IDE.
+
+## Visual testing with Storybook
+
+If you're someone who works a lot with [Storybook](https://storybook.js.org/) you'll quickly find that `mjml-react` unfortunately does not work outside of Node.js. This is because, `mjml-react` depends on `mjml`, which depends on the `fs` module (at the time of writing this post).
+
+We can get around this to some extent by generating our stories via a separate Node.js script every time we need to update our emails.
+
+```tsx
+// mount raw string html for rendering emails to storybook
+
+import React, { FC } from "react";
+
+export interface MjmlMounterProps {
+	children: string;
+}
+
+export const MjmlMounter: FC<MjmlMounterProps> = ({ children }) => {
+	return <div dangerouslySetInnerHTML={{ __html: children }} >;
+};
+```
+
+```tsx
+// Script file to generate our email stories, for storybook to read
+
+// All email template component types exported from an index.ts file
+import * as templates from "@myapp/server/emails/templates";
+import { stripIndent } from "common-tags";
+import fs from "fs-extra";
+import { render } from "mjml-react";
+import path from "path";
+import { ComponentType, createElement } from "react";
+
+const toStory = (key: string, text: string) => stripIndent`
+import { MjmlMounter } from "@myapp/server/emails";
+import React from "react";
+
+const html: string = \`${text}\`;
+
+export default { title: "emails/${key}" };
+
+export const Standard = () => <MjmlMounter>{html}</MjmlMounter>;
+
+Standard.parameters = {
+	layout: "fullscreen"
+};
+`;
+
+const generateTemplates = () => {
+	const emailHtmlDict: Record<string, string> = Object.keys(templates).reduce((acc, key) => {
+		const template = templates[key];
+
+		// This will fill your stories with your emails' default prop values
+		const withDefaultProps = createElement(template);
+		const { html, errors } = render(withDefaultProps, {
+			minify: false
+		});
+
+		if (errors?.length) {
+			throw new Error(errors[0]);
+		}
+
+		return { ...acc, [key]: html };
+	}, {});
+
+	// Prepare directory to generate stories into
+	fs.ensureDirSync("outputDir");
+	fs.emptyDirSync("outputDir");
+
+	Object.keys(emailHtmlDict).forEach((key) => {
+		const outputPath = path.join("outputDir", `${key}.stories.tsx`);
+		const emailHtml = emailHtmlDict[key];
+
+		fs.ensureFileSync(outputPath);
+		fs.writeFileSync(outputPath, toStory(key, emailHtml), {
+			encoding: "utf8",
+			flag: "w"
+		});
+	});
+};
+
+generateTemplates();
+```
+
+```tsx
+/* ... */
+
+// Ensure that your prop types stay as non-nullable, so that defaults aren't used in real-use
+export interface HelloEmailProps {
+	firstName: string;
+	lastName: string;
+}
+
+// Add default prop values for your generated stories
+export const HelloEmail: FC<HelloEmailProps> = ({
+	firstName = "Test",
+	lastName = "User"
+}) => {
+	/* ... */
+};
+```
+
+Looks unpleasant I know. Unfortunately, this is more-or-less my workflow at the time of writing this post.
+
+At this point, you can launch your Storybook and run your script via [ts-node](https://www.npmjs.com/package/ts-node) to see your email templates as stories.
+
+Happy coding! -- David Lee
