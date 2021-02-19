@@ -50,7 +50,7 @@ export const Page: PageType = () => {
 						/>
 						<PostLink
 							header="Selecting my GraphQL Stack"
-							description="Urql + Nexus + Prisma, with my official seal of approval"
+							description="Urql + Nexus + Prisma + Codegen for great TypeScript DX"
 							date="02/19/2020"
 						/>
 					</PostList>
