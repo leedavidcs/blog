@@ -9,6 +9,7 @@ export * from "./landing-avatar.component";
 export * from "./landing-hire-me.component";
 export * from "./landing-intro.component";
 export * from "./link.component";
+export * from "./list-item.component";
 export * from "./mdx-provider.component";
 export * from "./post-layout.component";
 export * from "./post-link.component";
