@@ -50,12 +50,7 @@ export const Page: PageType = () => {
 						/>
 						<PostLink
 							header="Selecting my GraphQL Stack"
-							description="No more string emails; made possible with MJML"
-							date="02/19/2020"
-						/>
-						<PostLink
-							header="Selecting my GraphQL Stack1"
-							description="No more string emails; made possible with MJML"
+							description="Urql + Nexus + Prisma, with my official seal of approval"
 							date="02/19/2020"
 						/>
 					</PostList>
