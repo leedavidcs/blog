@@ -1,6 +1,8 @@
+import { useColorMode } from "@chakra-ui/color-mode";
 import { Box, BoxProps } from "@chakra-ui/layout";
 import Highlight, { defaultProps, Language } from "prism-react-renderer";
-import theme from "prism-react-renderer/themes/dracula";
+import dracula from "prism-react-renderer/themes/dracula";
+import vsDark from "prism-react-renderer/themes/vsDark";
 import React, { FC, useMemo } from "react";
 
 export interface ICodeBlockProps extends BoxProps {
@@ -13,16 +15,24 @@ export const CodeBlock: FC<ICodeBlockProps> = ({
 	className: _className = "language-tsx",
 	...restBoxProps
 }) => {
+	const { colorMode } = useColorMode();
+
 	const language = useMemo(() => _className.replace(/language-/, ""), [_className]) as Language;
 
 	return (
-		<Highlight {...defaultProps} code={children} language={language} theme={theme}>
+		<Highlight
+			{...defaultProps}
+			code={children.trim()}
+			language={language}
+			theme={colorMode === "light" ? vsDark : dracula}
+		>
 			{({ className, style, tokens, getLineProps, getTokenProps }) => (
 				<Box
 					as="pre"
 					p="0.5rem"
 					border={1}
 					rounded="md"
+					overflow="auto"
 					fontSize={"0.875rem"}
 					{...restBoxProps}
 					className={className}
