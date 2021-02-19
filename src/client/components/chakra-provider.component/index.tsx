@@ -1,12 +1,12 @@
-import { ChakraProvider as _ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider as _ChakraProvider, ChakraProviderProps } from "@chakra-ui/react";
 import { css, Global } from "@emotion/react";
 import React, { FC, ReactNode } from "react";
 
-export interface IChakraProviderProps {
+export interface IChakraProviderProps extends ChakraProviderProps {
 	children?: ReactNode;
 }
 
-export const ChakraProvider: FC<IChakraProviderProps> = ({ children }) => {
+export const ChakraProvider: FC<IChakraProviderProps> = ({ children, ...restProviderProps }) => {
 	return (
 		<>
 			<Global
@@ -17,7 +17,9 @@ export const ChakraProvider: FC<IChakraProviderProps> = ({ children }) => {
 					}
 				`}
 			/>
-			<_ChakraProvider resetCSS={true}>{children}</_ChakraProvider>
+			<_ChakraProvider resetCSS={true} {...restProviderProps}>
+				{children}
+			</_ChakraProvider>
 		</>
 	);
 };

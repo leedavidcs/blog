@@ -1,6 +1,7 @@
 import { PostLayout } from "@/client/components";
 import { ChakraProvider } from "@/client/components/chakra-provider.component";
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
+import { cookieStorageManager, localStorageManager } from "@chakra-ui/color-mode";
+import { AnimatePresence } from "framer-motion";
 import { NextComponentType, NextPageContext } from "next";
 import { AppContext, AppInitialProps, AppProps } from "next/app";
 import NextHead from "next/head";
@@ -10,8 +11,9 @@ interface ICustomAppProps extends Omit<AppProps, "Component"> {
 	Component: NextComponentType<NextPageContext, any, {}> & { Layout?: ComponentType };
 }
 
-const App: NextComponentType<AppContext, AppInitialProps, ICustomAppProps> = ({
+const App: NextComponentType<AppContext, AppInitialProps, ICustomAppProps & { cookies: any }> = ({
 	Component,
+	cookies,
 	pageProps
 }) => {
 	const Layout: ComponentType = Component.Layout ?? PostLayout;
@@ -29,17 +31,29 @@ const App: NextComponentType<AppContext, AppInitialProps, ICustomAppProps> = ({
 					content="David Lee blogs about code"
 				/>
 			</NextHead>
-			<ChakraProvider>
-				<AnimateSharedLayout type="crossfade">
-					<AnimatePresence>
-						<Layout>
-							<Component {...pageProps} />
-						</Layout>
+			<ChakraProvider
+				colorModeManager={
+					typeof cookies === "string"
+						? cookieStorageManager(cookies)
+						: localStorageManager
+				}
+			>
+				<Layout>
+					<AnimatePresence exitBeforeEnter={true}>
+						<Component {...pageProps} />
 					</AnimatePresence>
-				</AnimateSharedLayout>
+				</Layout>
 			</ChakraProvider>
 		</>
 	);
+};
+
+export const getServerSideProps = ({ req }) => {
+	return {
+		props: {
+			cookies: req.headers.cookie ?? ""
+		}
+	};
 };
 
 export default App;
