@@ -1,8 +1,9 @@
 import { FavoriteTechnologies } from "@/client/components/favorite-technologies.component";
+import { Image } from "@/client/components/image.component";
 import { LandingAvatar } from "@/client/components/landing-avatar.component";
 import { LandingHireMe } from "@/client/components/landing-hire-me.component";
 import { Link } from "@/client/components/link.component";
-import { Box, BoxProps, Flex, Image, Text, useColorMode } from "@chakra-ui/react";
+import { Box, BoxProps, Flex, Text, useColorMode } from "@chakra-ui/react";
 import React, { FC } from "react";
 
 export const LandingIntro: FC<BoxProps> = (props) => {

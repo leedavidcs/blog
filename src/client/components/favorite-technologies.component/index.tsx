@@ -1,6 +1,7 @@
 import { ReactComponent as ReactIcon } from "@/assets/svg/react.favicon.svg";
+import { Image } from "@/client/components/image.component";
 import { Link } from "@/client/components/link.component";
-import { Icon, Image, Text, TextProps } from "@chakra-ui/react";
+import { Icon, Text, TextProps } from "@chakra-ui/react";
 import React, { FC } from "react";
 
 export const FavoriteTechnologies: FC<TextProps> = (props) => {
