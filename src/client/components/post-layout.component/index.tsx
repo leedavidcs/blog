@@ -22,7 +22,7 @@ export const PostLayout: FC<BoxProps> = ({ children, ...restBoxProps }) => {
 
 	return (
 		<MDXProvider>
-			<Surface height="100vh" {...restBoxProps}>
+			<Surface minHeight="100vh" {...restBoxProps}>
 				<Box css={classes.content}>
 					<NextLink href="/" passHref={true}>
 						<Link
