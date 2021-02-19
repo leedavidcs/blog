@@ -4,10 +4,11 @@ import {
 	Link,
 	PageType,
 	PostLink,
+	PostList,
 	Socials,
 	Surface
 } from "@/client/components";
-import { Box, Heading, List, ListItem, useColorMode } from "@chakra-ui/react";
+import { Box, Heading, useColorMode } from "@chakra-ui/react";
 import { css } from "@emotion/react";
 import NextLink from "next/link";
 import React, { Fragment } from "react";
@@ -26,7 +27,7 @@ export const Page: PageType = () => {
 	const { colorMode } = useColorMode();
 
 	return (
-		<Surface height="100vh">
+		<Surface initial="initial" animate="enter" exit="exit" height="100vh">
 			<Box css={classes.content}>
 				<NextLink href="/" passHref={true}>
 					<Link color={colorMode === "light" ? "purple.500" : "purple.300"}>
@@ -41,15 +42,23 @@ export const Page: PageType = () => {
 					<Heading as="h2" fontSize="2xl" mt={12} mb={4}>
 						Posts
 					</Heading>
-					<List spacing={4} my={0}>
-						<ListItem>
-							<PostLink
-								header="Writing Emails in React"
-								description="No more string emails; made possible with MJML"
-								date="02/18/2020"
-							/>
-						</ListItem>
-					</List>
+					<PostList spacing={4} my={0}>
+						<PostLink
+							header="Writing Emails in React"
+							description="No more string emails; made possible with MJML"
+							date="02/18/2020"
+						/>
+						<PostLink
+							header="Selecting my GraphQL Stack"
+							description="No more string emails; made possible with MJML"
+							date="02/19/2020"
+						/>
+						<PostLink
+							header="Selecting my GraphQL Stack1"
+							description="No more string emails; made possible with MJML"
+							date="02/19/2020"
+						/>
+					</PostList>
 				</Box>
 			</Box>
 			<ColorModeSwitch />

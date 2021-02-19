@@ -1,20 +1,12 @@
 import { useColorMode } from "@chakra-ui/color-mode";
 import { LinkIcon } from "@chakra-ui/icons";
-import {
-	Box,
-	Heading,
-	LinkBox,
-	LinkOverlay,
-	ListItem,
-	ListItemProps,
-	Text
-} from "@chakra-ui/layout";
+import { Box, BoxProps, Heading, LinkBox, LinkOverlay, Text } from "@chakra-ui/layout";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import NextLink from "next/link";
 import React, { FC, useMemo } from "react";
 
-export interface IPostLinkProps extends ListItemProps {
+export interface IPostLinkProps extends BoxProps {
 	date: string;
 	description: string;
 	header: string;
@@ -25,7 +17,7 @@ export const PostLink: FC<IPostLinkProps> = ({
 	date,
 	description,
 	header,
-	...restListItemProps
+	...restBoxProps
 }) => {
 	const { colorMode } = useColorMode();
 
@@ -34,8 +26,8 @@ export const PostLink: FC<IPostLinkProps> = ({
 	]);
 
 	return (
-		<ListItem
-			as={motion.li}
+		<Box
+			as={motion.div}
 			variants={{
 				initial: {
 					scale: 0.96,
@@ -61,7 +53,7 @@ export const PostLink: FC<IPostLinkProps> = ({
 					}
 				}
 			}}
-			{...(restListItemProps as any)}
+			{...(restBoxProps as any)}
 		>
 			<LinkBox
 				as={motion.article}
@@ -100,6 +92,6 @@ export const PostLink: FC<IPostLinkProps> = ({
 					<Text>{description}</Text>
 				</Box>
 			</LinkBox>
-		</ListItem>
+		</Box>
 	);
 };
