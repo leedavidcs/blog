@@ -218,7 +218,7 @@ ApolloClient, along with several custom [links](https://www.apollographql.com/do
 
 From an API perspective, Urql also feels remarkably similar to ApolloClient in all of: the GraphQL client, React hooks and caching.
 
-Setting up authentication, retries and caching felt easier with [exchanges](https://formidable.com/open-source/urql/docs/concepts/exchanges/) and Urql's extensive documentation, whereas Apollo felt lacking in some places.
+Setting up authentication, retries and caching also felt easier with [exchanges](https://formidable.com/open-source/urql/docs/concepts/exchanges/) and Urql's extensive documentation, whereas Apollo's felt lacking in some places.
 
 *Urql provides more comparisons between it and Apollo/Relay on [their site](https://formidable.com/open-source/urql/docs/comparison/).*
 
@@ -270,7 +270,7 @@ export const PostList: FC<PostListProps> = ({ userId }) => {
 };
 ```
 
-In the code example above, the type we passed to `useQuery` does not match the query string. So we not only had to define our `useQuery` type, but also type static analysis failed to catch the error we left in.
+In the code example above, the type we passed to `useQuery` does not match the query string. So we not only had to define our `useQuery` type, but also static analysis failed to catch the error we left in.
 
 We can resolve this by using [GraphQL Codegen](https://graphql-code-generator.com/).
 
@@ -318,6 +318,6 @@ export const PostList: FC<PostListProps> = ({ userId }) => {
 /* ... */
 ```
 
-With this, not only have we improved our TypeScript DX on the server, but also we have achieved a similar DX on the client with an API much like ApolloClient at a fraction of the added bundle size.
+With this, not only have we improved our TypeScript DX on the server, but we also achieved a similar DX on the client with an API much like ApolloClient at a fraction of the added bundle size.
 
 Happy coding! -- David Lee
