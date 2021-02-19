@@ -4,7 +4,7 @@ import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
 import { NextComponentType, NextPageContext } from "next";
 import { AppContext, AppInitialProps, AppProps } from "next/app";
 import NextHead from "next/head";
-import React, { ComponentType, Fragment } from "react";
+import React, { ComponentType } from "react";
 
 interface ICustomAppProps extends Omit<AppProps, "Component"> {
 	Component: NextComponentType<NextPageContext, any, {}> & { Layout?: ComponentType };
@@ -14,7 +14,7 @@ const App: NextComponentType<AppContext, AppInitialProps, ICustomAppProps> = ({
 	Component,
 	pageProps
 }) => {
-	const Layout: ComponentType = PostLayout ?? Fragment;
+	const Layout: ComponentType = Component.Layout ?? PostLayout;
 
 	return (
 		<>
