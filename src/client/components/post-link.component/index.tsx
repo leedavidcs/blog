@@ -4,11 +4,11 @@ import { Box, BoxProps, Heading, LinkBox, LinkOverlay, Text } from "@chakra-ui/l
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import NextLink from "next/link";
-import React, { FC, useMemo } from "react";
+import React, { FC, ReactChild, useMemo } from "react";
 
 export interface IPostLinkProps extends BoxProps {
 	date: string;
-	description: string;
+	description: ReactChild;
 	header: string;
 }
 
@@ -89,7 +89,9 @@ export const PostLink: FC<IPostLinkProps> = ({
 					<Text color={colorMode === "light" ? "gray.600" : "gray.400"} fontSize="small">
 						{dayjs(date).format("MMM DD, YYYY")}
 					</Text>
-					<Text>{description}</Text>
+					<Text display="inline-flex" alignItems="center">
+						{description}
+					</Text>
 				</Box>
 			</LinkBox>
 		</Box>
