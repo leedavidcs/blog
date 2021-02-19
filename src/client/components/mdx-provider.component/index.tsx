@@ -1,9 +1,27 @@
-import { CodeBlock } from "@/client/components/code-block.component";
+import { CodeBlock, ICodeBlockProps } from "@/client/components/code-block.component";
+import { ListItem } from "@/client/components/list-item.component";
 import { LinkIcon } from "@chakra-ui/icons";
-import { Code, Heading, Image, Link as ChakraLink, List, ListItem, Text } from "@chakra-ui/react";
+import {
+	Code,
+	Heading,
+	Image,
+	Link as ChakraLink,
+	ListItemProps,
+	ListProps,
+	OrderedList,
+	Text,
+	UnorderedList
+} from "@chakra-ui/react";
 import { MDXProvider as _MDXProvider } from "@mdx-js/react";
 import NextLink from "next/link";
-import React, { AnchorHTMLAttributes, DetailedHTMLProps, FC, ReactNode, useCallback } from "react";
+import React, {
+	AnchorHTMLAttributes,
+	DetailedHTMLProps,
+	FC,
+	HTMLAttributes,
+	ReactNode,
+	useCallback
+} from "react";
 
 export interface IMDXProviderProps {
 	children?: ReactNode;
@@ -22,9 +40,26 @@ export const MDXProvider: FC<IMDXProviderProps> = ({ children }) => {
 	const getHeaderType = useCallback(
 		(type: keyof JSX.IntrinsicElements) => {
 			const headerType: FC = ({ children: headerText, ...props }) => (
-				<NextLink href={toScrollId(headerText as string)} passHref={true}>
+				<NextLink href={`#${toScrollId(headerText as string)}`} passHref={true}>
 					<ChakraLink id={toScrollId(headerText as string)}>
-						<Heading as={type} {...props}>
+						<Heading
+							as={type}
+							fontSize={
+								type === "h1"
+									? "4xl"
+									: type === "h2"
+									? "3xl"
+									: type === "h3"
+									? "2xl"
+									: type === "h4"
+									? "xl"
+									: type === "h5"
+									? "larger"
+									: "large"
+							}
+							mb="0.8em"
+							{...props}
+						>
 							{headerText}
 							<LinkIcon height="0.5em" width="0.5em" ml="0.3em" />
 						</Heading>
@@ -50,11 +85,34 @@ export const MDXProvider: FC<IMDXProviderProps> = ({ children }) => {
 		[]
 	);
 
+	const code: FC<ICodeBlockProps> = useCallback((props) => <CodeBlock mb={4} {...props} />, []);
+
+	const li: FC<ListItemProps> = useCallback((props) => <ListItem mb={1} {...props} />, []);
+
+	const ol: FC<ListProps> = useCallback((props) => <OrderedList mb={4} {...props} />, []);
+
+	const p: FC<
+		DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
+	> = useCallback(({ children: pText, ...props }) => {
+		return (
+			<Text as="p" mb="0.8em" {...props}>
+				{pText}
+			</Text>
+		);
+	}, []);
+
+	const pre: FC<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>> = useCallback(
+		(props) => <div {...props} />,
+		[]
+	);
+
+	const ul: FC<ListProps> = useCallback((props) => <UnorderedList mb={4} {...props} />, []);
+
 	return (
 		<_MDXProvider
 			components={{
 				a,
-				code: CodeBlock,
+				code,
 				h1: getHeaderType("h1"),
 				h2: getHeaderType("h2"),
 				h3: getHeaderType("h3"),
@@ -63,10 +121,11 @@ export const MDXProvider: FC<IMDXProviderProps> = ({ children }) => {
 				h6: getHeaderType("h6"),
 				image: Image,
 				inlineCode: Code,
-				li: ListItem,
-				p: Text,
-				pre: CodeBlock,
-				ul: List
+				li,
+				ol,
+				p,
+				pre,
+				ul
 			}}
 		>
 			{children}
