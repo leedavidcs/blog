@@ -20,7 +20,7 @@ const info = await transporter.sendMail({
 ```
 *Example taken from [nodemailer.com](nodemailer.com)*
 
-If you're a React + TypeScript developer like me, losing all of your static typing and intellisense feels like a hit to your developer experience (DX).
+If you're a [React](https://reactjs.org/) + [TypeScript](https://www.typescriptlang.org/) developer like me, losing all of your static typing and intellisense feels like a hit to your developer experience (DX).
 
 Not only that, but also [a lot of CSS has lackluster support on email clients](https://www.campaignmonitor.com/css/), which can lead you to writing complex HTML `table` structures to ensure consistent layouts.
 
@@ -129,7 +129,7 @@ const html: string = render(email);
 
 You might say, "great, but wrapping every mjml component then typing all of the props seems like a pain".
 
-## Open-source got you covered
+## Open-source has you covered
 
 Good thing we have [mjml-react](https://github.com/wix-incubator/mjml-react) and [@types/mjml-react](https://www.npmjs.com/package/@types/mjml-react) which does it all for us.
 
@@ -393,7 +393,7 @@ export const HelloEmail: FC<HelloEmailProps> = ({
 };
 ```
 
-Looks unpleasant I know. Unfortunately, this is more-or-less my workflow at the time of writing this post.
+This looks unpleasant I know. Unfortunately, this is more-or-less my workflow at the time of writing this post.
 
 At this point, you can launch your Storybook and run your script via [ts-node](https://www.npmjs.com/package/ts-node) to see your email templates as stories.
 
