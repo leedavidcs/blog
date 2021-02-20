@@ -49,7 +49,7 @@ export const Page: PageType = () => {
 							date="02/18/2021"
 						/>
 						<PostLink
-							header="Best GraphQL stack for a TypeScript Dev"
+							header="Best GraphQL Stack for a TypeScript Dev"
 							description="Urql + Nexus + Prisma + Codegen for great TypeScript DX"
 							date="02/19/2021"
 						/>
