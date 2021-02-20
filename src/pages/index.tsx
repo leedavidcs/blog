@@ -58,6 +58,11 @@ export const Page: PageType = () => {
 							description="Linarias to spruce up your website"
 							date="02/20/2021"
 						/>
+						<PostLink
+							header="TS Magic: Caller Configurable Return Types"
+							description="Inspired by the Wizards of Prisma"
+							date="02/21/2021"
+						/>
 					</PostList>
 				</Box>
 			</Box>
@@ -69,3 +74,53 @@ export const Page: PageType = () => {
 Page.Layout = Fragment;
 
 export default Page;
+
+type KeyOfType = string | number | symbol;
+type FindUniqueParams<TKeys extends KeyOfType> = {
+	select?: { [key in TKeys]: true };
+};
+
+type FindUniqueQuery<T extends Object> = <TKeys extends keyof T>(
+	params: FindUniqueParams<TKeys>
+) => Promise<{ [Prop in TKeys]: T[Prop] } | null>;
+
+type User = {
+	id: number;
+	firstName: string;
+	lastName: string;
+	email: string;
+};
+
+const userFindUnique: FindUniqueQuery<User> = async (params) => {
+	if (Math.random() < 0.5) {
+		return null;
+	}
+
+	return await Promise.resolve(
+		Object.entries({
+			id: 0,
+			firstName: "John",
+			lastName: "Doe",
+			email: "johndoe@domain.com"
+		})
+			.filter(([key]) => !params.select || params.select[key])
+			.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as any)
+	);
+};
+
+const prisma = {
+	user: {
+		findUnique: userFindUnique
+	}
+};
+
+prisma.user.findUnique({}).then((user) => user);
+prisma.user
+	.findUnique({
+		select: {
+			id: true,
+			firstName: true,
+			email: true
+		}
+	})
+	.then((user) => user);
