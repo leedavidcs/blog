@@ -63,6 +63,11 @@ export const Page: PageType = () => {
 							description="Inspired by the Wizards of Prisma"
 							date="02/21/2021"
 						/>
+						<PostLink
+							header="Rate-Limiting your GraphQL Nexus Resolvers"
+							description="Create a custom Nexus plugin with graphql-rate-limit"
+							date="02/22/2021"
+						/>
 					</PostList>
 				</Box>
 			</Box>

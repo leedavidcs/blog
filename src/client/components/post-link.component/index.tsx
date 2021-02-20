@@ -24,7 +24,7 @@ export const PostLink: FC<IPostLinkProps> = ({
 	const href: string = useMemo(
 		() =>
 			`/posts/${header
-				.replace(/[^a-zA-Z0-9\s]/g, "")
+				.replace(/[^a-zA-Z0-9\s-]/g, "")
 				.toLowerCase()
 				.split(/\s+/)
 				.join("-")}`,
