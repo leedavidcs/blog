@@ -10,6 +10,7 @@ import {
 } from "@/client/components";
 import { Box, Heading, useColorMode } from "@chakra-ui/react";
 import { css } from "@emotion/react";
+import { oneLine } from "common-tags";
 import NextLink from "next/link";
 import React, { Fragment } from "react";
 
@@ -67,6 +68,13 @@ export const Page: PageType = () => {
 							header="Rate-Limiting your GraphQL Nexus Resolvers"
 							description="Create a custom Nexus plugin with graphql-rate-limit"
 							date="02/22/2021"
+						/>
+						<PostLink
+							header="Mocking next/image in Storybook"
+							description={oneLine`
+								Don't let Storybook stop you from using Next.js Image Optimization
+							`}
+							date="02/23/2021"
 						/>
 					</PostList>
 				</Box>
