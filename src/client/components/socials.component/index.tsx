@@ -2,28 +2,21 @@ import { ReactComponent as GithubIcon } from "@/assets/svg/github.favicon.svg";
 import { Image } from "@/client/components/image.component";
 import { Link } from "@/client/components/link.component";
 import { Box, BoxProps, Icon, useColorMode } from "@chakra-ui/react";
-import { css } from "@emotion/react";
+import styled from "@emotion/styled";
 import React, { FC } from "react";
 
-const classes = {
-	link: css`
-		&:not(:last-child) {
-			margin-right: 12px;
-		}
-	`
-};
+const SocialLink = styled(Link)`
+	&:not(:last-child) {
+		margin-right: 12px;
+	}
+`;
 
 export const Socials: FC<BoxProps> = ({ ...props }) => {
 	const { colorMode } = useColorMode();
 
 	return (
 		<Box {...props}>
-			<Link
-				css={classes.link}
-				display="inline-flex"
-				isExternal={true}
-				href="https://twitter.com/i3Daly"
-			>
+			<SocialLink isExternal={true} href="https://twitter.com/i3Daly">
 				Twitter{" "}
 				<Image
 					alt="twitter icon"
@@ -32,8 +25,8 @@ export const Socials: FC<BoxProps> = ({ ...props }) => {
 					width={4}
 					ml={1}
 				/>
-			</Link>
-			<Link css={classes.link} isExternal={true} href="https://github.com/leedavidcs">
+			</SocialLink>
+			<SocialLink isExternal={true} href="https://github.com/leedavidcs">
 				GitHub{" "}
 				<Icon
 					role="img"
@@ -44,12 +37,8 @@ export const Socials: FC<BoxProps> = ({ ...props }) => {
 					width={4}
 					ml={1}
 				/>
-			</Link>
-			<Link
-				css={classes.link}
-				isExternal={true}
-				href="https://www.linkedin.com/in/leedavidcs/"
-			>
+			</SocialLink>
+			<SocialLink isExternal={true} href="https://www.linkedin.com/in/leedavidcs/">
 				LinkedIn{" "}
 				<Image
 					alt="linkedin icon"
@@ -58,7 +47,7 @@ export const Socials: FC<BoxProps> = ({ ...props }) => {
 					width={4}
 					ml={1}
 				/>
-			</Link>
+			</SocialLink>
 		</Box>
 	);
 };
