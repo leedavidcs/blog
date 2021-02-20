@@ -21,9 +21,15 @@ export const PostLink: FC<IPostLinkProps> = ({
 }) => {
 	const { colorMode } = useColorMode();
 
-	const href: string = useMemo(() => `/posts/${header.toLowerCase().split(/\s+/).join("-")}`, [
-		header
-	]);
+	const href: string = useMemo(
+		() =>
+			`/posts/${header
+				.replace(/[^a-zA-Z0-9\s]/g, "")
+				.toLowerCase()
+				.split(/\s+/)
+				.join("-")}`,
+		[header]
+	);
 
 	return (
 		<Box
