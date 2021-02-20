@@ -27,7 +27,7 @@ export const Page: PageType = () => {
 	const { colorMode } = useColorMode();
 
 	return (
-		<Surface initial="initial" animate="enter" exit="exit" height="100vh">
+		<Surface initial="initial" animate="enter" exit="exit" minHeight="100vh">
 			<Box css={classes.content}>
 				<NextLink href="/" passHref={true}>
 					<Link color={colorMode === "light" ? "purple.500" : "purple.300"}>
@@ -55,7 +55,7 @@ export const Page: PageType = () => {
 						/>
 						<PostLink
 							header="Exploring CSS in JS"
-							description="Linarias for your love and website"
+							description="Linarias to spruce up your website"
 							date="02/20/2021"
 						/>
 					</PostList>

@@ -1,0 +1,326 @@
+export const meta = {
+	title: "Exploring CSS in JS",
+	author: "David Lee"
+};
+
+# Exploring CSS in JS
+
+February 20, 2021
+
+*Disclaimer: This post reflects my exploration of and personal experiences with CSS-in-JS as a [React](https://reactjs.org/) [TypeScript](https://www.typescriptlang.org/) developer.*
+
+CSS-in-JS (or CiJ) refers to the technique of using JavaScript to write styles to generate CSS in a declarative and maintainable way.
+
+These CiJ libraries aim to solve a variety of limitations of traditional CSS by providing benefits such as:
+
+1. Style-encapsulation (non-global selectors)
+2. Automatic-vendor prefixing (better browser vendor support)
+3. Benefits of the JavaScript / TypeScript ecosystem
+4. Integrations with React (some CiJ libraries)
+
+This mostly comes at a performance trade-off since your styles are now computed at runtime, may possibly block the initial paint of your components, and will increase your client's JavaScript bundle.
+
+There are numerous CSS-in-JS options to select from. Some may work better for you than others depending on your preferences and use-case.
+
+Below are some of the things that factored into my decisions on CSS-in-JS.
+
+## The performance concern
+
+There is a very real performance hit to the mounting and re-render times of React components when using CSS-in-JS versus not using any.
+
+*Example taken from [A-gambit's CSS-IN-JS-BENCHMARKS](https://github.com/A-gambit/CSS-IN-JS-Benchmarks/blob/master/RESULT.md)*
+
+Solution | Use CSS | Use Inline-Styles | Mount Time (ms) | Rerender time (ms)
+:--- | :--- | :--- | :--- | :---
+[react (without styles)](https://github.com/facebook/react) | - | - | 17.25 | 39.11
+[react (with inline-styles)](https://github.com/facebook/react) | - | + | 32.8 | 51.68
+[styled-jsx-inline-styles](https://github.com/zeit/styled-jsx) | + | + | 40.67 | 54.32
+[emotion-css-mode](https://github.com/emotion-js/emotion) | + | + | 40.2 | 54.91
+[cxs](https://github.com/jxnblk/cxs) | + | + | 39.87 | 55.28
+[react-css](https://github.com/facebook/react) | + | + | 39.3 | 55.39
+[aphrodite](https://github.com/Khan/aphrodite) | + | + | 42.25 | 55.48
+[glam-inline-style](https://github.com/threepointone/glam) | + | + | 41.75 | 57.22
+[glam-simple](https://github.com/threepointone/glam) | + | - | 42.67 | 72.69
+[merge-styles](https://github.com/OfficeDev/office-ui-fabric-react/packages/merge-styles) | + | - | 59.2 | 75.77
+[styled-components-inline-styles](https://github.com/styled-components/styled-components/tree/v2) | + | + | 97.6 | 78.03
+[styled-jss-w-o-plugins-v2](https://github.com/cssinjs/styled-jss) | + | - | 119.9 | 78.11
+[styled-jss-w-o-plugins](https://github.com/cssinjs/styled-jss) | + | - | 122.6 | 78.53
+[rockey-inline](https://github.com/tuchk4/rockey) | + | + | 98.53 | 79.01
+[fela](https://github.com/rofrischmann/fela/) | + | - | 75.52 | 84.82
+[styletron](https://github.com/rtsao/styletron) | + | - | 98.6 | 85.69
+[radium](https://github.com/FormidableLabs/radium) | - | + | 99.47 | 89.19
+[styled-jss-v2](https://github.com/cssinjs/styled-jss) | + | - | 165.4 | 91.07
+[styled-jss](https://github.com/cssinjs/styled-jss) | + | - | 166.05 | 93.51
+[emotion-extract-static](https://github.com/emotion-js/emotion) | + | + | 126.33 | 93.66
+[emotion-decouple](https://github.com/emotion-js/emotion) | + | - | 142.85 | 96.36
+[emotion-simple](https://github.com/emotion-js/emotion) | + | - | 138.08 | 96.94
+[styled-jsx-dynamic](https://github.com/zeit/styled-jsx) | + | - | 155.1 | 122.89
+[react-native-web](https://github.com/necolas/react-native-web) | + | + | 238.72 | 140.16
+[styled-components](https://github.com/styled-components/styled-components/tree/v2) | + | - | 182 | 146.84
+[styled-components-decouple-cell](https://github.com/styled-components/styled-components/tree/v2) | + | - | 213.53 | 152.39
+[rockey-speedy](https://github.com/tuchk4/rockey) | + | - | 114.3 | 187.27
+[rockey](https://github.com/tuchk4/rockey) | + | - | 213.32 | 274.72
+[glamorous](https://github.com/paypal/glamorous) | + | - | 205.7 | 283.68
+[react-jss](https://github.com/cssinjs/react-jss) | + | - | 198.97 | 297.74
+[glamorous-glamour-css](https://github.com/paypal/glamorous) | + | - | 278.7 | 407.91
+*sorted by rerender time*
+
+Looking at these benchmarks, you can see that [Styled-Components](https://www.npmjs.com/package/styled-components) and [JSS](https://www.npmjs.com/package/jss), two very popular options within CiJ, are seeing increases of around x10 in the time it takes to mount/re-render compared to React without styles.
+
+However, while the increases in times appear significant, I haven't felt that sites such as [Reddit](https://www.reddit.com/), [AirBnB](https://www.airbnb.com/) or [Github](https://github.com/), which all use Styled-Components, to feel less-usable as a result of increased render times.
+
+## Auto-completion + TypeScript support
+
+I value these as a TypeScript developer, so if a library has lackluster intellisense, it will rank lower on my preferences.
+
+Many well-maintained CiJ libraries ship with TypeScript definitions (examples: [Styled-Components](https://github.com/styled-components/styled-components), [JSS](https://github.com/cssinjs/jss), [Emotion](https://github.com/emotion-js/emotion), [Aphrodite](https://github.com/Khan/aphrodite)). So any use of `styled` will produce components with correctly typed props and any `className` generating APIs (e.g. `css`, `createUseStyles`, etc.) will return strings to be usable with your components' `className` props.
+
+*Example of Styled-Components*
+```tsx
+import React from "react";
+import { styled } from "styled-components";
+
+export interface ButtonProps {
+	size: "small" | "large";
+}
+
+export const Button = styled.button<ButtonProps>`
+	width: ${({ size }) => {
+		switch (size) {
+			case "small":
+				return "80px";
+			default:
+				return "200px";
+		}
+	}}
+`;
+
+// Prop types are the union of HTMLButtonElement props and ButtonProps
+Button.defaultProps = {
+	size: "small"
+};
+```
+
+*Example of React-JSS*
+```tsx
+import { Theme } from "./theme";
+import clsx from "clsx";
+import React, { ButtonHTMLAttributes, DetailedHTMLProps, FC } from "react";
+import { createUseStyles } from "react-jss";
+
+export interface ButtonProps extends
+	DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+	size: "small" | "large";
+}
+
+const styles = (theme: Theme) => ({
+	root: {
+		/* Unfortunately, untyped props from JSS */
+		width: ({ size }) => {
+			switch (size) {
+				case "small":
+					return "80px";
+				default:
+					return "200px";
+			}
+		}
+	}
+});
+
+const useStyles = createUseStyles<Theme, keyof ReturnType<typeof styles>>(styles);
+
+const Button: FC<ButtonProps> = ({ className, size, ...restButtonProps }) => {
+	/* classes will be typed with all class names */
+	const classes = useStyles({ size });
+
+	return <button {...restButtonProps} className={clsx(classes.root, className)} />;
+};
+```
+
+The `styled` syntax makes use of [tagged template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) so that developers can write real css syntax, with interpolated values and functions in JavaScript. Since you're writing styles in a string, you may not have syntax highlighting or auto-completion in your IDE.
+
+Thankfully, if you use [VSCode](https://code.visualstudio.com/) like me, there is a bit of set-up you can do to get syntax highlighting and auto-completion working for your `styled` and `css` template literals, regardless of which CiJ you're using (as long as they are using this style of tagged template literals).
+
+1. Inside VSCode, press `Ctrl + P`, and enter `ext install vscode-styled-components`
+2. Install `typescript-styled-plugin`
+```bash
+npm install --save-dev typescript-styled-plugin
+```
+3. Add a plugins section to your `tsconfig.json`
+```json
+{
+	"compilerOptions": {
+		"plugins": [
+			{
+				"name": "typescript-styled-plugin"
+			}
+		]
+	}
+}
+```
+
+## Real CSS vs CSS as JSON
+
+Simply put, being able to write real CSS is nice if you've already learned CSS or SCSS. In addition, we saw above that being able to write real CSS allows us to leverage IDE tooling such as syntax-highlighting and auto-completion from our IDE.
+
+While CSS as JSON relieves you from needing to learn the syntax for CSS, you miss out on the benefits above which loses out on some DX.
+
+However, it is not unusual to want to compose a CSS fragment expressed as JSON. Maybe the CSS fragment was derived from a JavaScript function such as those from [polished.js](https://polished.js.org/docs/).
+
+So being able to do both is a huge benefit to DX.
+
+*Example of Styled-Components*
+```tsx
+import { styled } from "styled-components";
+
+const borderStylesFragment = {
+	border: "1px solid black";
+	borderRadius: 4
+};
+
+export const Button = styled.button`
+	font-size: 0.875rem;
+	color: green;
+
+	${borderStylesFragment};
+`;
+```
+
+## Styled API or className?
+
+*Disclaimer: This section is purely my own preference, and something I do in my own projects. It's much simpler to adhere to a single convention in any shared project with multiple developers than do what I am about to suggest here:*
+
+There are many benefits with using the `styled` API. The [Styled-Components docs](https://styled-components.com/docs/basics#motivation) list many of the benefits there.
+
+Take these examples of using `styled` vs `className`:
+
+*Example of Styled-Components*
+```tsx
+import { styled } from "styled-components";
+
+export const Button = styled.button`
+	background-color: blue;
+`;
+```
+
+*Example of [cxs](https://github.com/cxs-css/cxs)*
+```tsx
+import clsx from "clsx";
+import { cxs } from "cxs";
+import React, { ButtonHTMLAttributes, DetailedHTMLProps, forwardRef } from "react";
+
+const classes = {
+	root: cxs({
+		backgroundColor: "blue"
+	})
+};
+
+export const Button = forwardRef<
+	HTMLButtonElement,
+	DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
+>(({ className, ...restButtonProps }, ref) => {
+	return (
+		<button
+			{...restButtonProps}
+			ref={ref}
+			className={clsx(classes.root, className)}
+		/>;
+});
+
+Button.displayName = "Button";
+```
+
+In this simple example, the `styled` example certainly looks much more attractive than the `className` example, as it's much more declarative.
+
+However, I like using a mix of `styled` and `className` in my own projects. So I like selecting a library that gives me the flexibility to do either or both.
+
+*Example using all styled components*
+```tsx
+/* ... */
+
+const CustomerDataTable: FC = ({ onClose }) => {
+	/* ... */
+
+	return (
+		<Wrapper>
+			<HeaderWrapper>
+				<TitleWrapper>
+					<Typography as="h1">Customers</Typography>
+				</TitleWrapper>
+				<CloseButton onClick={onClose}>Close</CloseButton>
+			</HeaderWrapper>
+			<DataTableWrapper>
+				<DataTable customers={customers} />
+			</DataTableWrapper>
+			<ActionsWrapper>
+				<DeleteButton>Delete</DeleteButton>
+				<EditButton>Edit</EditButton>
+			</ActionsWrapper>
+		</Wrapper>
+	);
+};
+```
+
+*Example using a mix of styled components and classNames *
+```tsx
+/* ... */
+
+const CustomerDataTable: FC = ({ onClose }) => {
+	/* ... */
+
+	return (
+		<div className={classes.wrapper}>
+			<div className={classes.headerWrapper}>
+				<div className={classes.titleWrapper}>
+					<Typography as="h1">Customers</Typography>
+				</div>
+				<Button className={classes.closeButton}>Close</Button>
+			</div>
+			<div className={classes.dataTableWrapper}>
+				<DataTable customers={customers} />
+			</div>
+			<div className={classes.actionsWrapper}>
+				<Button className={classes.deleteButton}>Delete</Button>
+				<Button className={classes.editButton}>Edit</Button>
+			</div>
+		</div>
+	);
+};
+```
+
+In shared projects, I would stick to the first example of using all shared components, because it is easier to create a convention to adhere to. But in my own projects, I tend to prefer the second, mixed example because I find it easier to parse for myself.
+
+Any `JSX.IntrinsicElement` such as `div` with a `className` can be assumed to be single-use and non-complex. Anything else is either a reusable atom, molecule or organism from my atomic design system, and may or may not be complex but warrants deeper understanding than a `JSX.IntrinsicElement`.
+
+It also helps with parsability that my IDE's theme will color `JSX.IntrinsicElement`s a different color than custom components from my atomic design system.
+
+## Final Decision?
+
+There are other factors I considered for which CiJ library I decided to use in my projects, such as:
+
+1. Ease of setting up
+2. Documentation quality
+3. SSR support
+4. Dynamic styles with React props
+5. How responsive the maintainers are
+6. etc...
+
+In the end, I've selected [Linaria](https://linaria.dev/) for my projects for the reasons below:
+
+1. Styles are transpiled at build-time, allowing your browser to evaluate it in parallel to your JavaScript as vanilla CSS.
+2. Provides a `styled` and `css` (`className`) API, with TypeScript support, syntax highlighting and auto-completion.
+3. Dynamic styles using React component props (dynamic styles evaluate to CSS variables)
+4. SSR support (styles are largely just vanilla CSS after all)
+5. Ease of setting up with [next-linaria](https://www.npmjs.com/package/next-linaria) (to use with [Next.js](https://nextjs.org/))
+
+Some cons to my decision include:
+
+1. Lack of CSS fragment composition / JSON interpolation
+2. Infrequent library updates (maintainers may not be the most responsive?)
+3. Mediocre documentation, but simple-enough API
+
+Linaria works really well for my preferred DX and use-cases.
+
+There's no objective "best" tool. As long as your projects' styles are more maintainable and your developers are generally content with the DX, that's a winning decision.
+
+Happy coding! -- David Lee
