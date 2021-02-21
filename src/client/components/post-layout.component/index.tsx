@@ -1,4 +1,3 @@
-import { ColorModeSwitch } from "@/client/components/color-mode-switch.component";
 import { Link } from "@/client/components/link.component";
 import { MDXProvider } from "@/client/components/mdx-provider.component";
 import { Surface } from "@/client/components/surface.component";
@@ -65,7 +64,6 @@ export const PostLayout: FC<BoxProps> = ({ children, ...restBoxProps }) => {
 					<MDXProvider>{children}</MDXProvider>
 				</Box>
 			</Box>
-			<ColorModeSwitch />
 		</Surface>
 	);
 };

@@ -1,4 +1,4 @@
-import { PostLayout } from "@/client/components";
+import { ColorModeSwitch, PostLayout } from "@/client/components";
 import { ChakraProvider } from "@/client/components/chakra-provider.component";
 import { cookieStorageManager, localStorageManager } from "@chakra-ui/color-mode";
 import { AnimatePresence } from "framer-motion";
@@ -24,10 +24,10 @@ const App: NextComponentType<AppContext, AppInitialProps, ICustomAppProps & { co
 	return (
 		<>
 			<NextHead>
-				<title key="title">lee.david.cs</title>
+				<title key="title">lee.david.cs Blog</title>
 				<meta key="description" name="description" content="David Lee blogs about code" />
 				<meta key="og:type" property="og:type" content="website" />
-				<meta key="og:title" property="og:title" content="lee.david.cs" />
+				<meta key="og:title" property="og:title" content="lee.david.cs Blog" />
 				<meta
 					key="og:description"
 					property="og:description"
@@ -41,6 +41,7 @@ const App: NextComponentType<AppContext, AppInitialProps, ICustomAppProps & { co
 						: localStorageManager
 				}
 			>
+				<ColorModeSwitch />
 				<AnimatePresence exitBeforeEnter={true}>
 					<Layout key={router.route}>
 						<Component {...pageProps} />

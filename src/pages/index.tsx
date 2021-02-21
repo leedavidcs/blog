@@ -1,5 +1,4 @@
 import {
-	ColorModeSwitch,
 	LandingIntro,
 	Link,
 	PageType,
@@ -79,7 +78,6 @@ export const Page: PageType = () => {
 					</PostList>
 				</Box>
 			</Box>
-			<ColorModeSwitch />
 		</Surface>
 	);
 };
