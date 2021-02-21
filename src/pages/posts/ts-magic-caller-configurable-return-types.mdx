@@ -1,0 +1,121 @@
+export const meta = {
+	title: "TS Magic: Caller Configurable Return Types",
+	author: "David Lee"
+};
+
+# TS Magic: Caller Configurable Return Types
+
+February 21, 2021
+
+If you're a user of [Prisma](https://www.prisma.io/), or wanted to create a function that changes its return-types based on the caller's parameters, this post is for you.
+
+The [TypeScript](https://www.typescriptlang.org/) wizards over at Prisma have achieved very extensive TypeScript support on their PrismaClient, such that the return types for any CRUD can be narrowed depending on what the caller desires.
+
+```markdown
+...
+model User {
+	id        Int @id @default(autoincrement())
+	firstName String
+	lastName  String
+	email     String
+}
+...
+```
+
+```typescript
+/* ... */
+
+// User contains only id, firstName and email. Not lastName
+const user = await prisma.user.findUnique({
+	where: {
+		id: 0
+	},
+	select: {
+		id: true,
+		firstName: true,
+		email: true
+	}
+});
+
+/* ... */
+```
+
+In this example, the caller of `prisma.user.findUnique` has specified that they wish their return object to contain only `id`, `firstName` and `email`. And if you actually had this in your IDE and hovered over `user`, you would find that your intellisense will give you exactly this narrowed type.
+
+How does Prisma do it?
+
+## Type Generics Magic
+
+*Disclaimer. I didn't actually look at Prisma's source code, so this may not be exactly the same. But the resulting TypeScript intellisense is identical enough.*
+
+In the end, the devs at Prisma are just cleverly using TypeScript's [type generics](https://www.typescriptlang.org/docs/handbook/generics.html). And it's something you can easily add to your functions in your projects too!
+
+```typescript
+/* ... */
+
+// Specify a super-set to the key-set you wish to filter from.
+// This example is the broadest key-set you can select
+type KeyOfType = string | number | symbol;
+
+// Simulate Prisma's parameters, passing the key-set as a generic to be inferred
+type FindUniqueParams<TKeys extends KeyOfType> = {
+	where: { id: 0 };
+	select?: { [key in TKeys]: true };
+};
+
+// The definition of a findOne query on entity type T
+// Once the T generic is passed in, TKeys will be inferred to be the key-set of T
+// And the return type will be the narrowed prop-set of the T type
+type FindUniqueQuery<T extends Object> = <TKeys extends keyof T>(
+	params: FindUniqueParams<TKeys>
+) => Promise<{ [Prop in TKeys]: T[Prop] } | null>;
+
+// Example type, taken from above
+type User = {
+	id: number;
+	firstName: string;
+	lastName: string;
+	email: string;
+};
+
+const findUniqueUser: FindUniqueQuery<User> = async (params) => {
+	return await Promise.resolve(
+		Object.entries({
+			id: 0,
+			firstName: "John",
+			lastName: "Doe",
+			email: "johndoe@domain.com"
+		})
+			.filter(([key]) => !params.select || params.select[key])
+			.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {} as any)
+	);
+};
+
+// Simulated Prisma client
+const prisma = {
+	user: {
+		findUnique: findUniqueUser
+	}
+};
+
+/* ... */
+
+// Hovering over user1 will show all props in TypeScript
+const user1 = await prisma.user.findUnique({ where: { id: 0 } });
+
+// Hovering over user2 will show id, firstName and email props in TypeScript
+const user2 = await prisma.user.findUnique({
+	where: { id: 0 },
+	select: {
+		id: true,
+		firstName: true,
+		email: true
+	}
+});
+
+/* ... */
+```
+
+Congrats! Now you've improved your function to return a narrowed type, making your DX even better in the future!
+
+Happy coding! -- David Lee

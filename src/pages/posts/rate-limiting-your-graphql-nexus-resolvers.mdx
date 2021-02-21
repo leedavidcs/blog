@@ -1,0 +1,196 @@
+export const meta = {
+	title: "Rate-Limiting your GraphQL Nexus Resolvers",
+	author: "David Lee"
+};
+
+# Rate-Limiting your GraphQL Nexus Resolvers
+
+February 22, 2021
+
+Maintaining a [GraphQL](https://graphql.org/) server, it is good practice to protect against malicious users who may want to do things such as issuing overly-complex queries, perform a DoS attack or web-scrape.
+
+In this post, we'll build a custom plugin for [GraphQL Nexus](https://nexusjs.org/) to rate-limit resolvers to mitigate some threat.
+
+In your GraphQL Nexus server, install the [graphql-rate-limit](https://www.npmjs.com/package/graphql-rate-limit) package.
+
+```bash
+npm install graphql-rate-limit
+```
+
+We will be using this to build our plugin.
+
+Now create your rate-limit plugin file. And start by defining the typings for your plugin:
+
+```typescript
+// file: /src/server/graphql/nexus/plugins/rate-limit.plugin
+
+import { GraphQLResolveInfo } from "graphql";
+import { GraphQLRateLimitDirectiveArgs } from "graphql-rate-limit/build/main/lib/types";
+import {
+	ArgsValue,
+	GetGen,
+	MaybePromise,
+	SourceValue
+} from "nexus/dist/core";
+
+// This will be the type of your exposed plugin field in Nexus
+export type FieldRateLimitResolver<TypeName extends string, FieldName extends string> = (
+	root: SourceValue<TypeName>,
+	args: ArgsValue<TypeName, FieldName>,
+	context: GetGen<"context">,
+	info: GraphQLResolveInfo
+) => MaybePromise<GraphQLRateLimitDirectiveArgs>;
+```
+
+Next, to guide Nexus to import the correct types during artifact generation, specify a generated typings import pointing to the type you just created:
+
+```typescript
+import { oneLine } from "common-tags";
+/* ... */
+import {
+	ArgsValue,
+	GetGen,
+	MaybePromise,
+	printedGenTyping,
+	printedGenTypingImport,
+	SourceValue
+} from "nexus/dist/core";
+
+// This will be the type of your exposed plugin field in Nexus
+export type FieldRateLimitResolver /* ... */;
+
+const fieldRateLimitResolverImport = printedGenTypingImport({
+	module: "@/server/graphql/nexus/plugins/rate-limit.plugin",
+	bindings: ["FieldRateLimitResolver"]
+});
+
+// This will guide Nexus on where to bind the types for your custom plugin
+const fieldDefTypes = printedGenTyping({
+	optional: true,
+	name: "rateLimit",
+	description: oneLine`
+		Rate limit plugin for an individual field. Uses the same directive args as
+		\`graphql-rate-limit\`.
+	`,
+	type: "FieldRateLimitResolver<TypeName, FieldName>",
+	imports: [fieldRateLimitResolverImport]
+});
+
+/* ... */
+```
+
+Then, define the actual logic for your custom plugin:
+
+```typescript
+/* ... */
+import { GraphQLResolveInfo } from "graphql";
+import { getGraphQLRateLimiter } from "graphql-rate-limit";
+import {
+	GraphQLRateLimitConfig,
+	GraphQLRateLimitDirectiveArgs
+} from "graphql-rate-limit/build/main/lib/types";
+/* ... */
+import { plugin } from "nexus";
+
+/* ... */
+
+export interface RateLimitPluginConfig extends GraphQLRateLimitConfig {
+	defaultRateLimit?: GraphQLRateLimitDirectiveArgs;
+}
+
+/* Define the actual plugin to be used with your Nexus Schema */
+export const rateLimitPlugin = (options: RateLimitPluginConfig) => {
+	const rateLimiter = getGraphQLRateLimiter(options);
+
+	return plugin({
+		name: "CustomNexusRateLimit",
+		description: "The rateLimit plugin provides field-level rate limiting for a schema",
+		fieldDefTypes,
+		onCreateFieldResolver: (config) => {
+			const rateLimit = config.fieldConfig.extensions?.nexus?.config.rateLimit;
+
+			/**
+			 * @description If the field doesn't have a rateLimit field, and no top-level default
+			 *     was configured on the schema, don't worry about wrapping the resolver
+			 */
+			if (rateLimit == null && !options.defaultRateLimit) {
+				return;
+			}
+
+			return async (parent, args, context, info, next) => {
+				const rateLimitArgs: GraphQLRateLimitDirectiveArgs =
+					rateLimit?.(parent, args, context, info) ?? options.defaultRateLimit!;
+
+				const errorMessage: Maybe<string> = await rateLimiter(
+					{ parent, args, context, info },
+					rateLimitArgs
+				);
+
+				if (errorMessage) {
+					throw new Error(errorMessage);
+				}
+
+				return next(parent, args, context, info);
+			};
+		}
+	});
+};
+```
+
+Lastly, apply it to your Nexus Schema
+
+```typescript
+import { GraphQLServerContext } from "./context";
+import { rateLimitPlugin } from "./plugins";
+import { GraphQLSchema } from "graphql";
+import { RedisStore } from "graphql-rate-limit";
+import { makeSchema } from "nexus";
+/* ... */
+
+export const schema: GraphQLSchema = makeSchema({
+	/* ... */
+	plugins: [
+		/* ... */
+		rateLimitPlugin({
+			idenfityContext: ({ user, req }: GraphQLServerContext): string => {
+				const userId: Maybe<string> = user?.id;
+				const ip: Maybe<string> = getClientIp(req);
+
+				const identityKey: string = userId ?? ip ?? "";
+
+				return identityKey;
+			},
+			// Optional, if you don't want to use a InMemoryStore
+			store: new RedisStore(redis.instance)
+		})
+		/* ... */
+	],
+	/* ... */
+});
+```
+
+Nice! Now after generating your GraphQL Nexus type artifacts, you can access a `rateLimit` field to rate limit your field resolvers.
+
+```typescript
+/* ... */
+export const users = queryField("users", {
+	type: nonNull(list(nonNull("User"))),
+	// Now you will have access to this typed property
+	// This will rate limit the users query to a max of 30 times in 1 minute per requester
+	rateLimit: () => ({ max: 30, window: "1m" }),
+	args: {
+		where: arg({ type: "UserWhereInput" })
+	},
+	resolve: async (parent, args, ctx, info) => {
+		const { where } = args;
+		const { prisma } = ctx;
+
+		return await prisma.users.findMany({ where });
+	}
+});
+/* ... */
+```
+
+You can take custom Nexus plugins further to easily create things such as [yup input validation](https://github.com/jquense/yup) and [graphql-query-complexity](https://github.com/slicknode/graphql-query-complexity) on a per-resolver basis!
+
+Happy coding! -- David Lee

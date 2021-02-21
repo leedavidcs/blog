@@ -1,0 +1,80 @@
+export const meta = {
+	title: "Mocking next/image in Storybook",
+	author: "David Lee"
+};
+
+# Mocking next/image in Storybook
+
+February 23, 2021
+
+As of the date I am writing this, [Storybook](https://storybook.js.org/) will break on any component that renders an Image component from [next/image](https://nextjs.org/docs/api-reference/next/image).
+
+That kind of sucks, but that's alright. We can stub out the implementation of `next/image` with a mock in the meantime.
+
+*Example stub implementation for next/image*
+```javascript
+// file: ./mocks/next/image.js
+
+// Stub implementation of next/image. May need to be adapted depending on how you use next/image
+
+import { createElement } from "react";
+
+const Image = ({
+	children,
+	className,
+	objectFit,
+	objectPosition,
+	src,
+	style,
+	...restProps
+}) => {
+	return createElement(
+		"img",
+		{
+			className,
+			src,
+			style: {
+				...style,
+				objectFit,
+				objectPosition
+			},
+			...restProps
+		},
+		children
+	);
+};
+
+export default Image;
+```
+
+/* Example webpack config for storybook, using the next/image mock */
+```javascript
+// .storybook/main.js
+
+const path = require("path");
+const webpack = require("webpack");
+
+module.exports = {
+	/* ... */
+	webpackFinal: (config) => {
+		/**
+		 * !HACK
+		 * @description next/image doesn't work with storybook, so we are stubbing it with a mock
+		 * @author David Lee
+		 * @date February 23, 2021
+		 */
+		config.plugins.push(
+			new webpack.NormalModuleReplacementPlugin(
+				/^next\/image$/,
+				path.resolve(__dirname, "./mocks/next/image.js")
+			)
+		);
+
+		return config;
+	}
+};
+```
+
+Now, you can generate snapshots, visually test, make demos, etc. of your components that make use of `next/image`!
+
+Happy coding! -- David Lee

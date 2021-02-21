@@ -118,9 +118,7 @@
 		"object-shorthand": "error",
 		"prefer-arrow/prefer-arrow-functions": "error",
 		"prettier/prettier": "error",
-		"react/jsx-uses-react": "off",
 		"react/prop-types": "off",
-		"react/react-in-jsx-scope": "off",
 		"react/self-closing-comp": [
 			"error",
 			{

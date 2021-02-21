@@ -1,12 +1,13 @@
 import { Switch, SwitchProps, useColorMode } from "@chakra-ui/react";
-import { FC } from "react";
+import React, { FC } from "react";
 
-export const DarkModeSwitch: FC<SwitchProps> = (props) => {
+export const ColorModeSwitch: FC<SwitchProps> = (props) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 	const isDark = colorMode === "dark";
 
 	return (
 		<Switch
+			aria-label="color mode switch"
 			position="fixed"
 			top="1rem"
 			right="1rem"
