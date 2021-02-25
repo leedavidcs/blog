@@ -3,6 +3,7 @@ import { Image } from "@/client/components/image.component";
 import { LandingAvatar } from "@/client/components/landing-avatar.component";
 import { LandingHireMe } from "@/client/components/landing-hire-me.component";
 import { Link } from "@/client/components/link.component";
+import { SpecializeTechnologies } from "@/client/components/specialize-technologies.component";
 import { Box, BoxProps, Flex, Text, useColorMode } from "@chakra-ui/react";
 import React, { FC } from "react";
 
@@ -38,6 +39,7 @@ export const LandingIntro: FC<BoxProps> = (props) => {
 					</Text>
 				</Box>
 			</Flex>
+			<SpecializeTechnologies mb={2} />
 			<FavoriteTechnologies mb={4} />
 			<LandingHireMe />
 		</Box>

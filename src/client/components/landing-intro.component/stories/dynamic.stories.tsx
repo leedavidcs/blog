@@ -1,4 +1,4 @@
-import { LandingIntro } from "@/client/components";
+import { ColorModeSwitch, LandingIntro } from "@/client/components";
 import React, { FC } from "react";
 
 export default {
@@ -7,5 +7,10 @@ export default {
 };
 
 export const Standard: FC = () => {
-	return <LandingIntro />;
+	return (
+		<>
+			<LandingIntro />
+			<ColorModeSwitch />
+		</>
+	);
 };
