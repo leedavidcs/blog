@@ -1,47 +1,83 @@
-import { ReactComponent as ReactIcon } from "@/assets/svg/react.favicon.svg";
+import { ReactComponent as LinariaIcon } from "@/assets/svg/linaria.favicon.svg";
 import { Image } from "@/client/components/image.component";
 import { Link } from "@/client/components/link.component";
-import { Icon, Text, TextProps } from "@chakra-ui/react";
+import { Box, BoxProps, Icon, Text } from "@chakra-ui/react";
 import React, { FC } from "react";
 
-export const FavoriteTechnologies: FC<TextProps> = (props) => {
+export const FavoriteTechnologies: FC<BoxProps> = (props) => {
 	return (
-		<Text {...props}>
-			My favorite technologies are{" "}
-			<Link isExternal={true} href="https://reactjs.org/">
-				React{" "}
-				<Icon
-					role="img"
-					aria-label="react icon"
-					as={ReactIcon}
-					height={4}
-					width={4}
-					ml={1}
-				/>
-			</Link>
-			,{" "}
-			<Link isExternal={true} href="https://www.typescriptlang.org/">
-				TypeScript{" "}
-				<Image
-					alt="typescript icon"
-					src="/assets/png/typescript.favicon.png"
-					height={4}
-					width={4}
-					ml={1}
-				/>
-			</Link>{" "}
-			and{" "}
-			<Link isExternal={true} href="https://graphql.org/">
-				GraphQL{" "}
-				<Image
-					alt="graphql icon"
-					src="/assets/ico/graphql.favicon.ico"
-					height={4}
-					width={4}
-					ml={1}
-				/>
-			</Link>
-			.
-		</Text>
+		<Box {...props}>
+			<Text>Other favorites include:</Text>
+			<Text>
+				<Link isExternal={true} href="https://nextjs.org/">
+					Next.js{" "}
+					<Image
+						alt="nextjs icon"
+						src="/assets/ico/nextjs.favicon.ico"
+						height={4}
+						width={4}
+						ml={1}
+					/>
+				</Link>{" "}
+				,{" "}
+				<Link isExternal={true} href="https://formidable.com/open-source/urql/">
+					Urql{" "}
+					<Image
+						alt="urql icon"
+						src="/assets/png/urql.favicon.png"
+						height={4}
+						width={4}
+						ml={1}
+					/>
+				</Link>{" "}
+				,{" "}
+				<Link isExternal={true} href="https://nexusjs.org/">
+					Nexus{" "}
+					<Image
+						alt="nexus icon"
+						src="/assets/png/nexus.favicon.png"
+						height={4}
+						width={4}
+						ml={1}
+					/>
+				</Link>{" "}
+				,{" "}
+				<Link isExternal={true} href="https://www.prisma.io/">
+					Prisma{" "}
+					<Image
+						alt="prisma icon"
+						src="/assets/png/prisma.favicon.png"
+						height={4}
+						width={4}
+						ml={1}
+					/>
+				</Link>{" "}
+				,{" "}
+				<Link isExternal={true} href="https://linaria.dev/">
+					Linaria{" "}
+					<Icon
+						role="img"
+						aria-label="linaria icon"
+						as={LinariaIcon}
+						height={4}
+						width={4}
+						ml={1}
+						color="#ED2D66"
+					/>
+				</Link>{" "}
+				,{" "}
+				<Link isExternal={true} href="https://storybook.js.org/">
+					Storybook{" "}
+					<Image
+						alt="storybook icon"
+						src="/assets/png/storybook.favicon.png"
+						height={4}
+						width={4}
+						ml={1}
+					/>
+				</Link>{" "}
+				and more!
+			</Text>
+		</Box>
 	);
 };

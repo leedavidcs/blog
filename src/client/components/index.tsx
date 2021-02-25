@@ -16,6 +16,7 @@ export * from "./post-layout.component";
 export * from "./post-link.component";
 export * from "./post-list.component";
 export * from "./socials.component";
+export * from "./specialize-technologies.component";
 export * from "./surface.component";
 
 export type PageType<P = {}, IP = P> = NextPage<P, IP> & {
