@@ -24,7 +24,7 @@ export const LandingIntro: FC<BoxProps> = (props) => {
 					</Text>
 					<Text mb={2}>
 						I&apos;m a Software Engineer who enjoys exploring different technologies,
-						improving the developer experience and occasionally working on{" "}
+						improving the developer experience and working on{" "}
 						<Link isExternal={true} href="https://toastel.com">
 							Toastel.com{" "}
 							<Image
