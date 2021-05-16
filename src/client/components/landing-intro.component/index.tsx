@@ -25,11 +25,11 @@ export const LandingIntro: FC<BoxProps> = (props) => {
 					<Text mb={2}>
 						I&apos;m a Software Engineer who enjoys exploring different technologies,
 						improving the developer experience and working on{" "}
-						<Link isExternal={true} href="https://toastel.com">
-							Toastel.com{" "}
+						<Link isExternal={true} href="https://openbase.com">
+							Openbase.com{" "}
 							<Image
-								alt="toastel icon"
-								src="/assets/ico/toastel.favicon.ico"
+								alt="openbase icon"
+								src="/assets/ico/openbase.favicon.ico"
 								height={5}
 								width={5}
 								ml={1}
