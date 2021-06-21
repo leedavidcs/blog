@@ -1,0 +1,46 @@
+export const meta = {
+	title: "Porting Openbase to SSR",
+	author: "David Lee"
+};
+
+# Porting Openbase to SSR
+
+June 21, 2021
+
+It has been an exciting while since my last post ;)
+
+I've been working a frontend engineering role at [Openbase](https://openbase.com), a site where developers can find and compare open-source packages, curated by the developer community.
+
+One of the more interesting challenges I had the opportunity of tackling at Openbase was improving our core web vitals on [Lighthouse](https://developers.google.com/web/tools/lighthouse) and improving our SEO.
+
+While we did manage to improve our performance score on Lighthouse from ~15 to ~50 using strategies including inlining critical CSS, preloading fonts, and code-splitting, it was becomming increasingly difficult to improve our scores any further.
+
+Finally, we decided to settle for [Next.js](https://nextjs.org): a React framework built for performance, SEO, SSR and SSG.
+
+The gradual migration strategy was pretty easy. We had an existing client-side-rendered React app bundled with [Parcel.js](https://parceljs.org/) that we wanted to move to Next.js which uses [webpack](https://webpack.js.org/) under the hood. To avoid tangling with a hybrid Parcel + Webpack codebase, I decided to create a separate codebase containing the Next.js code.
+
+Next.js documents a gradual migration strategy for apps not already on Next.js through their [Rewrites config](https://nextjs.org/docs/api-reference/next.config.js/rewrites).
+
+```js
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: '/:path*',
+        destination: `${process.env.CSR_BASE_URL}/:path*`,
+      },
+    ]
+  },
+}
+```
+
+Effectively, the way it works is: any page not found within the Next.js codebase will proxy to our existing client-side-rendered web-app and mask the URL so the user appears not to be redirected. This allows us to move the app 1 page at a time.
+
+## Afterwards
+After re-writing our home-page to more heavily leverage [@apollo/client caching](https://www.apollographql.com/docs/react/caching/cache-configuration/), use [next/dynamic for code-splitting](https://nextjs.org/docs/advanced-features/dynamic-import), use [next/image for image optimization](https://nextjs.org/docs/api-reference/next/image) and use [incremental-static-regeneration](https://nextjs.org/docs/basic-features/data-fetching#incremental-static-regeneration), out page is now blazing fast. [Vercel's Analytics](https://vercel.com/analytics) shows that our real user score for the home-page is now between 90-100, which is a huge step-up from the ~50 we were hitting before!
+
+Next.js is a great way to improve your site's performance while also embracing modern technology in a bleeding-edge yet stable way.
+
+I highly recommend checking out and using both [Next.js](https://nextjs.org) and [Openbase](https://openbase.com) for both your old and new projects if you're looking to improve your site's performance and SEO (Openbase now supports finding packages by tree-shaking and bundle-size).
+
+Happy coding! -- David Lee
