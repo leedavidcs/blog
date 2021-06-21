@@ -75,6 +75,11 @@ export const Page: PageType = () => {
 							`}
 							date="02/23/2021"
 						/>
+						<PostLink
+							header="Porting Openbase to SSR"
+							description="Migrate gradually with Next.js"
+							date="06/21/2021"
+						/>
 					</PostList>
 				</Box>
 			</Box>
